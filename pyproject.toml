@@ -1,0 +1,18 @@
+[project]
+name = "puruan-image-reg"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "aiofiles>=25.1.0",
+    "colored>=2.3.1",
+    "fastapi[all]>=0.124.0",
+    "kornia-moons>=0.2.9",
+    "onnxscript>=0.5.6",
+    "opencv-python>=4.12.0.88",
+    "polygraphy>=0.49.26",
+    "pydantic>=2.12.5",
+    "pylint>=4.0.4",
+    "tensorrt>=10.14.1.48.post1",
+]

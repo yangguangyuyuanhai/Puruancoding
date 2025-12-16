@@ -1,2 +1,5 @@
-# Puruancoding
-这是一个自动分类识别房屋差异的代码
+### Convert onnx to engine via polygraphy
+```shell
+polygraphy convert model.onnx -o model.engine
+
+```

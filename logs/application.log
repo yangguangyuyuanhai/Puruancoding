@@ -1,0 +1,2600 @@
+start application
+start application
+start application
+start application
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+cache image dir: []
+cache image dir: []
+start cleaner
+start cleaner
+cache image dir: []
+cache image dir: []
+start application
+start application
+start cleaner
+start cleaner
+cache image dir: []
+cache image dir: []
+start cleaner
+start cleaner
+cache image dir: []
+cache image dir: []
+start cleaner
+start cleaner
+cache image dir: []
+cache image dir: []
+start application
+start application
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 1765256125.319822
+clean dir: 1765256125.319822
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 1765256125.319822
+clean dir: 1765256125.319822
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 1765256125.319822
+clean dir: 1765256125.319822
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 1765256125.319822 - 2025-12-09 13:00:00.386123
+clean dir: 1765256125.319822 - 2025-12-09 13:00:00.386123
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 1765256125.319822 - 2025-12-09 13:00:01.388915
+clean dir: 1765256125.319822 - 2025-12-09 13:00:01.388915
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 1765256125.319822 - 2025-12-09 13:00:02.391423
+clean dir: 1765256125.319822 - 2025-12-09 13:00:02.391423
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 1765256125.319822 - 2025-12-09 13:00:03.394410
+clean dir: 1765256125.319822 - 2025-12-09 13:00:03.394410
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:00:58.630065
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:00:58.630065
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:00:59.633135
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:00:59.633135
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:00.636180
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:00.636180
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:01.639944
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:01.639944
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:02.643417
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:02.643417
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:03.645560
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:03.645560
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:04.650674
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:04.650674
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:05.654206
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:05.654206
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:06.657366
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:06.657366
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:07.660400
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:07.660400
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:45.660643 : 0:06:20.340821
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:45.660643 : 0:06:20.340821
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:46.663303 : 0:06:21.343481
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:46.663303 : 0:06:21.343481
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:47.666286 : 0:06:22.346464
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:47.666286 : 0:06:22.346464
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:48.669616 : 0:06:23.349794
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:48.669616 : 0:06:23.349794
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:49.673087 : 0:06:24.353265
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:49.673087 : 0:06:24.353265
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:50.676527 : 0:06:25.356705
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:50.676527 : 0:06:25.356705
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:51.679400 : 0:06:26.359578
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:51.679400 : 0:06:26.359578
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:56.816362 : 0:06:31.496540
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:56.816362 : 0:06:31.496540
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:57.819307 : 0:06:32.499485
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:57.819307 : 0:06:32.499485
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:58.822715 : 0:06:33.502893
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:58.822715 : 0:06:33.502893
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:59.826414 : 0:06:34.506592
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:01:59.826414 : 0:06:34.506592
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:00.829582 : 0:06:35.509760
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:00.829582 : 0:06:35.509760
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:17.753203 : 412
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:17.753203 : 412
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:18.755792 : 413
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:18.755792 : 413
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:19.759291 : 414
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:19.759291 : 414
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:20.761235 : 415
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:20.761235 : 415
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:21.764093 : 416
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:21.764093 : 416
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:22.767087 : 417
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:22.767087 : 417
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:23.770383 : 418
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:23.770383 : 418
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:24.773161 : 419
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:02:24.773161 : 419
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:22.675907 : 7.95593475
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:22.675907 : 7.95593475
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:23.678915 : 7.972651549999999
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:23.678915 : 7.972651549999999
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:24.682482 : 7.989377666666667
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:24.682482 : 7.989377666666667
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:25.685916 : 8.006101566666667
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:25.685916 : 8.006101566666667
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:26.688981 : 8.022819316666666
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:26.688981 : 8.022819316666666
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:27.692451 : 8.039543816666667
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:27.692451 : 8.039543816666667
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:49.814999 : 8
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:49.814999 : 8
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:50.818299 : 8
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:50.818299 : 8
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:51.821434 : 8
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:03:51.821434 : 8
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:24.427261 : 8.985123983333333
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:24.427261 : 8.985123983333333
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:25.429933 : 9.001835183333332
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:25.429933 : 9.001835183333332
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:26.433558 : 9.018562266666667
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:26.433558 : 9.018562266666667
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:27.436043 : 9.03527035
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:27.436043 : 9.03527035
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:28.439235 : 9.051990216666667
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:28.439235 : 9.051990216666667
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:37.557033 : 9.203953516666667
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:37.557033 : 9.203953516666667
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:38.560162 : 9.220672333333333
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:38.560162 : 9.220672333333333
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:39.563585 : 9.23739605
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:39.563585 : 9.23739605
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:40.567696 : 9.254131233333334
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:40.567696 : 9.254131233333334
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:41.570836 : 9.270850233333334
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:41.570836 : 9.270850233333334
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:42.574115 : 9.28757155
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:42.574115 : 9.28757155
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:43.576012 : 9.304269833333333
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:43.576012 : 9.304269833333333
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:44.578629 : 9.320980116666668
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:44.578629 : 9.320980116666668
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:45.581623 : 9.337696683333332
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:45.581623 : 9.337696683333332
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:46.584572 : 9.3544125
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:46.584572 : 9.3544125
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:47.587545 : 9.371128716666668
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:47.587545 : 9.371128716666668
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:48.591068 : 9.3878541
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:48.591068 : 9.3878541
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:49.594076 : 9.404570900000001
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:49.594076 : 9.404570900000001
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:50.596747 : 9.421282083333333
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:50.596747 : 9.421282083333333
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:51.599789 : 9.437999450000001
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:51.599789 : 9.437999450000001
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:52.602638 : 9.4547136
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:52.602638 : 9.4547136
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:53.605794 : 9.471432866666667
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:53.605794 : 9.471432866666667
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:54.608476 : 9.488144233333333
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:54.608476 : 9.488144233333333
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:55.612214 : 9.504873199999999
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:55.612214 : 9.504873199999999
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:56.615154 : 9.521588866666667
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:56.615154 : 9.521588866666667
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:57.617545 : 9.538295383333333
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:57.617545 : 9.538295383333333
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:58.620499 : 9.555011283333332
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:58.620499 : 9.555011283333332
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:59.623479 : 9.571727616666667
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:04:59.623479 : 9.571727616666667
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:00.627217 : 9.588456583333334
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:00.627217 : 9.588456583333334
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:01.630789 : 9.605182783333333
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:01.630789 : 9.605182783333333
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:02.633392 : 9.621892833333334
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:02.633392 : 9.621892833333334
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:03.636634 : 9.638613533333334
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:03.636634 : 9.638613533333334
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:04.639563 : 9.655329016666666
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:04.639563 : 9.655329016666666
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:05.642953 : 9.672052183333333
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:05.642953 : 9.672052183333333
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:06.646389 : 9.688776116666666
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:06.646389 : 9.688776116666666
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:07.649563 : 9.705495683333334
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:07.649563 : 9.705495683333334
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:08.652414 : 9.722209866666667
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:08.652414 : 9.722209866666667
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:09.655634 : 9.7389302
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:09.655634 : 9.7389302
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:10.658764 : 9.755649033333333
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:10.658764 : 9.755649033333333
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:11.661660 : 9.772363966666667
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:11.661660 : 9.772363966666667
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:12.665192 : 9.7890895
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:12.665192 : 9.7890895
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:13.668426 : 9.805810066666668
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:13.668426 : 9.805810066666668
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:14.671532 : 9.8225285
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:14.671532 : 9.8225285
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:15.674531 : 9.83924515
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:15.674531 : 9.83924515
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:16.678657 : 9.855980583333332
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:16.678657 : 9.855980583333332
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:17.681752 : 9.872698833333335
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:17.681752 : 9.872698833333335
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:18.685369 : 9.889425783333333
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:18.685369 : 9.889425783333333
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:19.688057 : 9.90613725
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:19.688057 : 9.90613725
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:20.691009 : 9.922853116666666
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:20.691009 : 9.922853116666666
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:21.693947 : 9.939568750000001
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:21.693947 : 9.939568750000001
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:22.697025 : 9.956286716666666
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:22.697025 : 9.956286716666666
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:23.699850 : 9.973000466666667
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:23.699850 : 9.973000466666667
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:24.703511 : 9.98972815
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:24.703511 : 9.98972815
+start cleaner
+start cleaner
+cache image dir: [PosixPath('caches/puruan/image_1')]
+cache image dir: [PosixPath('caches/puruan/image_1')]
+clean dir: caches/puruan/image_1
+clean dir: caches/puruan/image_1
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:25.707118 : 10.006454933333334
+clean dir: 2025-12-09 12:55:25.319822 - 2025-12-09 13:05:25.707118 : 10.006454933333334
+start cleaner
+start cleaner
+cache image dir: []
+cache image dir: []
+start cleaner
+start cleaner
+cache image dir: []
+cache image dir: []
+start cleaner
+start cleaner
+cache image dir: []
+cache image dir: []
+start cleaner
+start cleaner
+cache image dir: []
+cache image dir: []
+start cleaner
+start cleaner
+cache image dir: []
+cache image dir: []
+start cleaner
+start cleaner
+cache image dir: []
+cache image dir: []
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 29, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 37, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 37, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 37, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 37, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 37, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 37, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 37, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 37, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 37, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 37, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 37, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 37, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 38, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 38, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 39, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+Task exception was never retrieved
+future: <Task finished name='Task-1' coro=<main() done, defined at /home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py:15> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 37, in <module>
+    asyncio.run(main(args))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/main.py", line 18, in main
+    await launch()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/__init__.py", line 14, in launch
+    await asyncio.gather(*tasks)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
+    self.run_forever()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
+    self._run_once()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
+    handle._run()
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/src/application/api.py", line 39, in start
+    await server.serve()
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/home/charles/.local/share/uv/python/cpython-3.10.17-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/home/charles/workspaces/llava-chicken/puruan_image_reg/.venv/lib/python3.10/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+KeyboardInterrupt
+start application
+start application
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+load all phases
+load all phases
+load LoFTRTensorRT
+load LoFTRTensorRT
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+load all phases
+load LoFTRTensorRT
+start application
+start application
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
+start cleaner
