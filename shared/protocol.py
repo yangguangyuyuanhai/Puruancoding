@@ -38,6 +38,7 @@ class ModelType(str, Enum):
     """支持的推理模型类型"""
     SAM3 = "sam3"          # SAM3 分割检测
     DREAMSIM = "dreamsim"  # DreamSim 变化检测
+    PIPELINE = "pipeline"  # SAM3→DreamSim 流水线
 
 
 # ============================================================

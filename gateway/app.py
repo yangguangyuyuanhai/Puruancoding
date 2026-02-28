@@ -35,7 +35,7 @@ from shared.protocol import JobMeta, ModelType, JobStatus
 # 导入数据库操作层
 from gateway.db import init_pool, close_pool, JobRepository, TaskRepository
 # 导入文件索引器（扫描目录/解析 ZIP）
-from gateway.indexer import index_sam3_input, index_dreamsim_input
+from gateway.indexer import index_sam3_input, index_dreamsim_input, index_pipeline_input
 # 导入任务调度器（分桶、分发任务）
 from gateway.scheduler import (
     compute_bucket_count, create_job_dirs, write_job_meta,
@@ -128,6 +128,9 @@ class JobResponse(BaseModel):
     params: Optional[dict] = None        # 推理参数
     created_at: Optional[str] = None     # 创建时间
     updated_at: Optional[str] = None     # 最后更新时间
+    # 流水线扩展字段
+    phase: Optional[str] = None          # 当前流水线阶段 (sam3/dreamsim)
+    children: Optional[list[dict]] = None  # 子任务进度列表
 
 
 class HealthResponse(BaseModel):
@@ -147,7 +150,7 @@ async def create_job(req: CreateJobRequest):
     流程: 验证参数 → 索引图片 → 分桶 → 写入 DB 和文件系统 → 返回 job_id
     """
     # 验证模型类型是否合法
-    if req.model_type not in (ModelType.SAM3.value, ModelType.DREAMSIM.value):
+    if req.model_type not in (ModelType.SAM3.value, ModelType.DREAMSIM.value, ModelType.PIPELINE.value):
         raise HTTPException(400, f"Invalid model_type: {req.model_type}")
 
     # 验证输入路径是否存在
@@ -193,6 +196,98 @@ async def create_job(req: CreateJobRequest):
             task_descriptors = distribute_sam3_tasks(job_id, image_paths, params, num_buckets)
             # 批量写入数据库 tasks 表
             await TaskRepository.bulk_create(job_id, task_descriptors)
+
+        elif req.model_type == ModelType.PIPELINE.value:
+            # --- SAM3→DreamSim 流水线任务 ---
+            # 流水线必须提供 SAM3 的文本提示词
+            if not req.text:
+                raise HTTPException(400, "Pipeline model requires 'text' parameter for SAM3 phase")
+
+            # 索引 before/ 和 after/ 目录
+            pipeline_input = index_pipeline_input(req.input_path, extract_base)
+            before_images = pipeline_input["before_images"]
+            after_images = pipeline_input["after_images"]
+
+            # 组装 SAM3 推理参数
+            sam3_params = {
+                "text": req.text,
+                "conf": req.conf,
+                "skip_dce": req.skip_dce,
+                "dilate": req.dilate,
+                "fill_holes": req.fill_holes,
+                "rect_fill": req.rect_fill,
+                "bbox_pad": req.bbox_pad,
+            }
+            # 组装 DreamSim 推理参数（供后续 Janitor 使用）
+            dreamsim_params = {
+                "thresh": req.thresh,
+                "crop": req.crop,
+                "step": req.step,
+                "batch": req.batch,
+            }
+            # parent job 保存所有参数
+            pipeline_params = {
+                "sam3": sam3_params,
+                "dreamsim": dreamsim_params,
+                "num_workers": req.num_workers,
+            }
+
+            # 1. 创建 parent pipeline job（无自己的 tasks，total_tasks=0）
+            total_tasks = 0
+            await JobRepository.create_job(
+                ModelType.PIPELINE.value, req.input_path, pipeline_params, total_tasks, job_id=job_id,
+            )
+
+            # 2. 创建 SAM3 Before child job
+            before_job_id = str(uuid.uuid4())
+            before_total = len(before_images)
+            before_buckets = compute_bucket_count(before_total, req.num_workers)
+            await JobRepository.create_job(
+                ModelType.SAM3.value, req.input_path, sam3_params, before_total,
+                job_id=before_job_id, parent_job_id=job_id, pipeline_phase="sam3_before",
+            )
+            before_tasks = distribute_sam3_tasks(before_job_id, before_images, sam3_params, before_buckets)
+            await TaskRepository.bulk_create(before_job_id, before_tasks)
+            await JobRepository.update_status(before_job_id, JobStatus.RUNNING.value)
+
+            # 3. 创建 SAM3 After child job
+            after_job_id = str(uuid.uuid4())
+            after_total = len(after_images)
+            after_buckets = compute_bucket_count(after_total, req.num_workers)
+            await JobRepository.create_job(
+                ModelType.SAM3.value, req.input_path, sam3_params, after_total,
+                job_id=after_job_id, parent_job_id=job_id, pipeline_phase="sam3_after",
+            )
+            after_tasks = distribute_sam3_tasks(after_job_id, after_images, sam3_params, after_buckets)
+            await TaskRepository.bulk_create(after_job_id, after_tasks)
+            await JobRepository.update_status(after_job_id, JobStatus.RUNNING.value)
+
+            # 写入 meta.json（pipeline parent）
+            meta = JobMeta(
+                job_id=job_id,
+                model_type=ModelType.PIPELINE.value,
+                input_path=req.input_path,
+                params=pipeline_params,
+                total_tasks=total_tasks,
+            )
+            write_job_meta(job_id, meta)
+
+            # 更新 parent job 状态为 running
+            await JobRepository.update_status(job_id, JobStatus.RUNNING.value)
+
+            logger.info(
+                f"Pipeline job {job_id} created: before={before_total}, after={after_total}, "
+                f"children=[{before_job_id}, {after_job_id}]"
+            )
+            return {
+                "job_id": job_id,
+                "total_tasks": total_tasks,
+                "status": "running",
+                "children": [
+                    {"job_id": before_job_id, "phase": "sam3_before", "total_tasks": before_total},
+                    {"job_id": after_job_id, "phase": "sam3_after", "total_tasks": after_total},
+                ],
+            }
 
         else:  # dreamsim
             # --- DreamSim 变化检测任务 ---
@@ -255,6 +350,43 @@ async def get_job(job_id: str):
     # 计算进度百分比
     progress = (completed / total * 100) if total > 0 else 0
 
+    # 流水线扩展：如果是 pipeline job，返回子任务进度
+    phase = None
+    children_info = None
+    if job["model_type"] == ModelType.PIPELINE.value:
+        children = await JobRepository.get_children_jobs(job_id)
+        children_info = []
+        has_dreamsim = False
+        sam3_all_done = True
+        for child in children:
+            c_total = child["total_tasks"]
+            c_completed = child["completed_tasks"]
+            c_progress = (c_completed / c_total * 100) if c_total > 0 else 0
+            children_info.append({
+                "job_id": str(child["id"]),
+                "phase": child["pipeline_phase"],
+                "status": child["status"],
+                "total_tasks": c_total,
+                "completed_tasks": c_completed,
+                "failed_tasks": child["failed_tasks"],
+                "progress_pct": round(c_progress, 2),
+            })
+            if child["pipeline_phase"] == "dreamsim":
+                has_dreamsim = True
+            if child["pipeline_phase"] in ("sam3_before", "sam3_after") and child["status"] != "completed":
+                sam3_all_done = False
+        # 确定当前流水线阶段
+        if has_dreamsim:
+            phase = "dreamsim"
+        elif sam3_all_done and children:
+            phase = "sam3_done"
+        else:
+            phase = "sam3"
+        # pipeline job 的总进度 = 所有 children 的聚合进度
+        total = sum(c["total_tasks"] for c in children_info)
+        completed = sum(c["completed_tasks"] for c in children_info)
+        progress = (completed / total * 100) if total > 0 else 0
+
     return JobResponse(
         job_id=str(job["id"]),
         model_type=job["model_type"],
@@ -267,6 +399,8 @@ async def get_job(job_id: str):
         params=json.loads(job["params"]) if job["params"] else None,
         created_at=job["created_at"].isoformat() if job.get("created_at") else None,
         updated_at=job["updated_at"].isoformat() if job.get("updated_at") else None,
+        phase=phase,
+        children=children_info,
     )
 
 
@@ -347,21 +481,33 @@ async def export_results(job_id: str):
     """
     导出结果为流式 ZIP 下载
     收集 results 目录和 spillover 目录下的所有结果文件，打包为 ZIP 流式返回
+    对 pipeline job：只导出 DreamSim child job 的结果（最终结果）
     """
     job = await JobRepository.get_job(job_id)
     if not job:
         raise HTTPException(404, f"Job not found: {job_id}")
 
-    # 结果文件可能分布在两个目录：正常结果目录 + spillover 溢出目录
-    results_dir = os.path.join(JOBS_DIR, job_id, "results")
-    spillover_dir = os.path.join(SPILLOVER_DIR, job_id)
+    # 确定需要收集结果的 job_id 列表
+    if job["model_type"] == ModelType.PIPELINE.value:
+        # pipeline job：只收集 DreamSim child 的结果
+        children = await JobRepository.get_children_jobs(job_id)
+        export_job_ids = [
+            str(c["id"]) for c in children if c["pipeline_phase"] == "dreamsim"
+        ]
+        if not export_job_ids:
+            raise HTTPException(404, "DreamSim phase not yet created or completed")
+    else:
+        export_job_ids = [job_id]
 
     # 收集所有结果文件路径
     result_files = []
-    for d in [results_dir, spillover_dir]:
-        if os.path.isdir(d):
-            for f in os.listdir(d):
-                result_files.append(os.path.join(d, f))
+    for eid in export_job_ids:
+        results_dir = os.path.join(JOBS_DIR, eid, "results")
+        spillover_dir = os.path.join(SPILLOVER_DIR, eid)
+        for d in [results_dir, spillover_dir]:
+            if os.path.isdir(d):
+                for f in os.listdir(d):
+                    result_files.append(os.path.join(d, f))
 
     if not result_files:
         raise HTTPException(404, "No result files found")

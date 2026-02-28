@@ -248,7 +248,38 @@ python -m gateway.app
 
 ---
 
-## 四、版本兼容性说明
+## 四、数据库迁移（从 v1.0 升级）
+
+v1.1 新增了 SAM3→DreamSim 流水线 (Pipeline) 功能，需要在 `jobs` 表中添加两个字段。
+
+**全新部署**无需额外操作，`sql/init.sql` 已包含所有字段。
+
+**从 v1.0 升级**需手动执行以下 SQL：
+
+```bash
+docker exec -i batch-postgres psql -U batch -d batch_detection <<'EOF'
+-- 添加流水线父任务 ID（子任务才有值，父任务删除时级联删除子任务）
+ALTER TABLE jobs ADD COLUMN IF NOT EXISTS parent_job_id UUID REFERENCES jobs(id) ON DELETE CASCADE;
+-- 添加流水线阶段标识：sam3_before / sam3_after / dreamsim
+ALTER TABLE jobs ADD COLUMN IF NOT EXISTS pipeline_phase VARCHAR(20);
+-- 添加流水线子任务查询索引
+CREATE INDEX IF NOT EXISTS idx_jobs_parent ON jobs(parent_job_id);
+EOF
+```
+
+**验证：**
+
+```bash
+docker exec batch-postgres psql -U batch -d batch_detection \
+  -c "\d jobs" | grep -E "parent_job_id|pipeline_phase"
+# 预期输出：
+#  parent_job_id  | uuid                     |           |          |
+#  pipeline_phase | character varying(20)    |           |          |
+```
+
+---
+
+## 五、版本兼容性说明
 
 ### CUDA 版本链路
 

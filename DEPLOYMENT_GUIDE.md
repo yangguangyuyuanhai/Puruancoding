@@ -1,6 +1,6 @@
 # 违章建筑检测系统 — 批量推理平台
 
-# 使用与部署文档 v1.0
+# 使用与部署文档 v1.1
 
 ---
 
@@ -31,13 +31,14 @@
 - [四、API 使用手册](#四api-使用手册)
   - [4.1 提交 SAM3 批量任务](#41-提交-sam3-批量任务)
   - [4.2 提交 DreamSim 批量任务](#42-提交-dreamsim-批量任务)
-  - [4.3 查询任务进度](#43-查询任务进度)
-  - [4.4 列出所有任务](#44-列出所有任务)
-  - [4.5 取消任务](#45-取消任务)
-  - [4.6 重试失败任务](#46-重试失败任务)
-  - [4.7 查看失败详情](#47-查看失败详情)
-  - [4.8 导出结果](#48-导出结果)
-  - [4.9 系统健康检查](#49-系统健康检查)
+  - [4.3 提交 Pipeline 流水线任务](#43-提交-pipeline-流水线任务)
+  - [4.4 查询任务进度](#44-查询任务进度)
+  - [4.5 列出所有任务](#45-列出所有任务)
+  - [4.6 取消任务](#46-取消任务)
+  - [4.7 重试失败任务](#47-重试失败任务)
+  - [4.8 查看失败详情](#48-查看失败详情)
+  - [4.9 导出结果](#49-导出结果)
+  - [4.10 系统健康检查](#410-系统健康检查)
 - [五、运维手册](#五运维手册)
   - [5.1 日常巡检](#51-日常巡检)
   - [5.2 日志查看](#52-日志查看)
@@ -84,6 +85,14 @@
 - **输入**：包含 `before/` 和 `after/` 子目录的图片目录，同名文件自动配对
 - **输出**：热力图版（叠加热力图+红框标注）+ 纯净版（原图+红框标注）
 
+### 场景三：SAM3→DreamSim 流水线 (Pipeline)
+
+- **用途**：一键完成「分割抠像 + 变化检测」全流程
+- **输入**：包含 `before/` 和 `after/` 子目录的图片目录 + 文本提示词
+- **流程**：系统自动先对两批图片分别跑 SAM3 分割，再将 SAM3 结果按文件名配对后跑 DreamSim 变化检测
+- **输出**：DreamSim 热力图（基于 SAM3 抠像结果的变化对比）
+- **优势**：用户无需手动衔接两个阶段，全程一键触发，Janitor 自动推进流水线
+
 ## 1.3 使用场景
 
 | 场景 | 模型 | 典型规模 | 预计耗时(8卡) |
@@ -91,6 +100,7 @@
 | 园区违建普查 | SAM3 | 500-2000 张 | 5-20 分钟 |
 | 季度变化比对 | DreamSim | 200-1000 对 | 10-30 分钟 |
 | 紧急拆违取证 | SAM3 | 50-100 张 | < 2 分钟 |
+| 全流程违建检测 | Pipeline | 200-500 对 | 15-40 分钟 (SAM3+DreamSim) |
 
 ## 1.4 操作流程
 
@@ -190,9 +200,9 @@ puruan_2_28/
 ├── gateway/                    # Gateway 服务 (宿主机运行)
 │   ├── app.py                  #   FastAPI 入口，7 个 API 路由
 │   ├── db.py                   #   PostgreSQL asyncpg 封装
-│   ├── indexer.py              #   ZIP/目录索引器 + DreamSim 配对
+│   ├── indexer.py              #   ZIP/目录索引器 + DreamSim 配对 + Pipeline 索引
 │   ├── scheduler.py            #   Bucket 划分与任务分发
-│   ├── janitor.py              #   后台守护：心跳巡检/spillover/任务回收
+│   ├── janitor.py              #   后台守护：心跳巡检/spillover/任务回收/流水线推进
 │   └── scaler.py               #   Auto-Scaler 弹性伸缩控制器
 ├── worker/                     # Worker 服务 (Docker 容器内运行)
 │   ├── launcher.py             #   容器入口：N 进程启动器 + 弹性伸缩
@@ -259,15 +269,17 @@ puruan_2_28/
 | 字段 | 类型 | 说明 |
 |------|------|------|
 | `id` | UUID (PK) | 任务唯一标识 |
-| `model_type` | VARCHAR(20) | `sam3` 或 `dreamsim` |
+| `model_type` | VARCHAR(20) | `sam3`、`dreamsim` 或 `pipeline` |
 | `status` | VARCHAR(20) | `pending` → `running` → `completed` / `failed` / `cancelled` |
-| `total_tasks` | INTEGER | 子任务总数 |
+| `total_tasks` | INTEGER | 子任务总数（pipeline parent 为 0） |
 | `completed_tasks` | INTEGER | 已完成数 |
 | `failed_tasks` | INTEGER | 失败数 |
 | `input_path` | TEXT | 输入目录/ZIP 路径 |
-| `params` | JSONB | 模型参数 |
+| `params` | JSONB | 模型参数（pipeline 存储 `{sam3:{...}, dreamsim:{...}, num_workers:N}`） |
 | `created_at` | TIMESTAMPTZ | 创建时间 |
 | `updated_at` | TIMESTAMPTZ | 最后更新时间 |
+| `parent_job_id` | UUID (FK → jobs) | 流水线父任务 ID（仅子任务有值，级联删除） |
+| `pipeline_phase` | VARCHAR(20) | 流水线阶段标识：`sam3_before` / `sam3_after` / `dreamsim` |
 
 ### tasks 表 — 单个子任务
 
@@ -291,6 +303,7 @@ puruan_2_28/
 idx_tasks_job_status  ON tasks(job_id, status)       -- 任务状态查询
 idx_tasks_bucket      ON tasks(job_id, bucket_id, status) -- 分桶抢占
 idx_jobs_status       ON jobs(status)                 -- 活跃任务筛选
+idx_jobs_parent       ON jobs(parent_job_id)          -- 流水线子任务查询
 idx_tasks_worker      ON tasks(worker_id, status)     -- Worker 任务查询
 ```
 
@@ -342,6 +355,48 @@ idx_tasks_worker      ON tasks(worker_id, status)     -- Worker 任务查询
    └── heatmap_area_001_clean.jpg (纯净版：原图 + 红框)
 ```
 
+### SAM3→DreamSim 流水线处理流程
+
+```
+1. 用户 POST /api/jobs
+   {input_path: "/data/pairs/", model_type: "pipeline", text: "building", thresh: 0.3}
+
+2. Gateway:
+   ├── indexer.py 扫描 before/ 和 after/ → 各发现 200 张图片
+   ├── 创建 Pipeline parent job (DB, total_tasks=0, 仅作聚合点)
+   ├── 创建 SAM3 Before child job → 分发 200 个 SAM3 任务
+   └── 创建 SAM3 After child job  → 分发 200 个 SAM3 任务
+
+3. SAM3 Workers 并行处理:
+   ├── 24 个 SAM3 Worker 同时抢占 before 和 after 两个 child job 的任务
+   ├── 结果分别写入各自 child job 的 results/ 目录
+   └── Janitor 巡检自动同步 child job 进度
+
+4. 阶段推进 (Janitor _check_pipeline_progress):
+   ├── 两个 SAM3 child 都 completed → 触发 _create_dreamsim_phase
+   ├── 收集两个 SAM3 child 的 results/ 目录
+   ├── 按文件名配对 (result_area_001.jpg ↔ result_area_001.jpg)
+   └── 自动创建 DreamSim child job → 分发 200 个 DreamSim 任务
+
+5. DreamSim Workers 处理:
+   ├── 抢占 DreamSim child job 的任务
+   └── 输出热力图到 DreamSim child 的 results/ 目录
+
+6. 完成:
+   ├── DreamSim child completed → Janitor 标记 pipeline parent completed
+   └── 用户 GET /api/jobs/{id}/export → 只导出 DreamSim 阶段结果
+```
+
+**Pipeline 数据流图：**
+
+```
+before/img001.jpg ──→ [SAM3 Before Job] ──→ results/result_img001.jpg ─┐
+before/img002.jpg ──→                   ──→ results/result_img002.jpg ─┤
+...                                                                     ├→ 配对 → [DreamSim Job]
+after/img001.jpg  ──→ [SAM3 After Job]  ──→ results/result_img001.jpg ─┤      → heatmap_result_img001.jpg
+after/img002.jpg  ──→                   ──→ results/result_img002.jpg ─┘      → heatmap_result_img002.jpg
+```
+
 ## 2.6 弹性伸缩策略
 
 ### 参数
@@ -386,6 +441,9 @@ t=210s  空闲 30s → SCALE_DOWN → 逐步收缩回每卡 1 Worker
 | 结果目录过大 | Janitor 自动 spillover 到溢出区 | 自动 |
 | 数据库连接断开 | Worker 自动重连 | 自动 |
 | Gateway 重启 | 任务状态在 DB 中持久化，不丢失 | 重启后自动恢复 |
+| Pipeline SAM3 阶段失败 | Janitor 检测 SAM3 child failed → 标记 pipeline 整体 failed | 重试对应 child job |
+| Pipeline DreamSim 阶段失败 | Janitor 检测 DreamSim child failed → 标记 pipeline 整体 failed | 重试 DreamSim child |
+| Pipeline 创建 DreamSim 失败 | 异常捕获 → 标记 pipeline failed，记录错误日志 | 排查后重新提交 |
 
 ## 2.8 扩展新模型指南
 
@@ -768,13 +826,82 @@ POST /api/jobs
 - 文件名必须一一对应（不含扩展名部分必须相同）
 - 未配对的文件会被跳过并记录警告日志
 
-## 4.3 查询任务进度
+## 4.3 提交 Pipeline 流水线任务
+
+```
+POST /api/jobs
+```
+
+**请求体：**
+
+```json
+{
+    "input_path": "/data/comparison/zone_c/",
+    "model_type": "pipeline",
+    "text": "building",
+    "conf": 0.25,
+    "skip_dce": false,
+    "dilate": 2,
+    "fill_holes": true,
+    "thresh": 0.30,
+    "crop": 224,
+    "step": 0,
+    "batch": 16,
+    "num_workers": 24
+}
+```
+
+**参数说明：**
+
+Pipeline 同时接受 SAM3 和 DreamSim 的参数，SAM3 参数用于第一阶段分割，DreamSim 参数用于第二阶段变化检测。
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `input_path` | string | 是 | 包含 `before/` 和 `after/` 子目录的路径 |
+| `model_type` | string | 是 | 固定 `"pipeline"` |
+| `text` | string | 是 | SAM3 检测提示词 |
+| `conf` | float | 否 | SAM3 置信度阈值 (默认 0.2) |
+| `skip_dce` | bool | 否 | 跳过暗光增强 (默认 false) |
+| `dilate` | int | 否 | 边缘膨胀核大小 (默认 0) |
+| `fill_holes` | bool | 否 | 填充 mask 孔洞 (默认 false) |
+| `rect_fill` | bool | 否 | 矩形修复 (默认 false) |
+| `bbox_pad` | int | 否 | 检测框外扩 (默认 0) |
+| `thresh` | float | 否 | DreamSim 变化阈值 (默认 0.3) |
+| `crop` | int | 否 | DreamSim 滑窗大小 (默认 224) |
+| `step` | int | 否 | DreamSim 滑窗步长 (默认 0=自动) |
+| `batch` | int | 否 | DreamSim 批大小 (默认 16) |
+
+**输入目录结构：** 与 DreamSim 相同，需包含 `before/` 和 `after/` 子目录。
+
+**响应：**
+
+```json
+{
+    "job_id": "a1b2c3d4-...",
+    "total_tasks": 0,
+    "status": "running",
+    "children": [
+        {"job_id": "e5f6g7h8-...", "phase": "sam3_before", "total_tasks": 200},
+        {"job_id": "i9j0k1l2-...", "phase": "sam3_after", "total_tasks": 200}
+    ]
+}
+```
+
+**流程说明：**
+
+1. 系统立即创建 1 个 parent pipeline job + 2 个 SAM3 child job
+2. SAM3 Worker 自动抢占 child job 的任务并行处理
+3. 两个 SAM3 child 全部 completed 后，Janitor 自动创建 DreamSim child job
+4. DreamSim Worker 抢占处理完成后，pipeline parent 标记为 completed
+5. 全程无需人工干预，通过 `GET /api/jobs/{parent_id}` 监控进度
+
+## 4.4 查询任务进度
 
 ```
 GET /api/jobs/{job_id}
 ```
 
-**响应：**
+**响应（普通任务）：**
 
 ```json
 {
@@ -795,6 +922,33 @@ GET /api/jobs/{job_id}
 }
 ```
 
+**响应（Pipeline 任务）：**
+
+```json
+{
+    "job_id": "a1b2c3d4-...",
+    "model_type": "pipeline",
+    "status": "running",
+    "total_tasks": 600,
+    "completed_tasks": 350,
+    "failed_tasks": 0,
+    "progress_pct": 58.33,
+    "input_path": "/data/comparison/zone_c/",
+    "phase": "sam3",
+    "children": [
+        {"job_id": "e5f6-...", "phase": "sam3_before", "status": "completed", "total_tasks": 200, "completed_tasks": 200, "failed_tasks": 0, "progress_pct": 100.0},
+        {"job_id": "i9j0-...", "phase": "sam3_after", "status": "running", "total_tasks": 200, "completed_tasks": 150, "failed_tasks": 0, "progress_pct": 75.0},
+        {"job_id": "m3n4-...", "phase": "dreamsim", "status": "pending", "total_tasks": 200, "completed_tasks": 0, "failed_tasks": 0, "progress_pct": 0}
+    ]
+}
+```
+
+Pipeline 特有字段：
+- `phase`: 当前阶段 — `sam3`（SAM3 处理中）/ `sam3_done`（SAM3 完成等待创建 DreamSim）/ `dreamsim`（DreamSim 处理中）
+- `children`: 各子任务的独立进度
+- `total_tasks` / `completed_tasks`: 聚合所有 children 的数据
+```
+
 **status 状态机：**
 
 ```
@@ -805,7 +959,7 @@ pending ──► running ──► completed  (全部成功)
 
 **轮询建议：** 每 2-5 秒轮询一次 `progress_pct`，到达 100% 即可导出。
 
-## 4.4 列出所有任务
+## 4.5 列出所有任务
 
 ```
 GET /api/jobs?limit=50&offset=0
@@ -820,7 +974,7 @@ GET /api/jobs?limit=50&offset=0
 
 **响应：** `JobResponse` 数组，按创建时间倒序排列。
 
-## 4.5 取消任务
+## 4.6 取消任务
 
 ```
 DELETE /api/jobs/{job_id}
@@ -837,7 +991,7 @@ DELETE /api/jobs/{job_id}
 
 取消后正在运行的子任务会在当前图片处理完后停止（不会暴力中断）。
 
-## 4.6 重试失败任务
+## 4.7 重试失败任务
 
 ```
 POST /api/jobs/{job_id}/retry
@@ -854,7 +1008,7 @@ POST /api/jobs/{job_id}/retry
 }
 ```
 
-## 4.7 查看失败详情
+## 4.8 查看失败详情
 
 ```
 GET /api/jobs/{job_id}/failed
@@ -875,7 +1029,7 @@ GET /api/jobs/{job_id}/failed
 
 用于定位失败原因：图片损坏、路径不存在、推理异常等。
 
-## 4.8 导出结果
+## 4.9 导出结果
 
 ```
 GET /api/jobs/{job_id}/export
@@ -894,8 +1048,9 @@ wget -O results.zip "http://localhost:8090/api/jobs/{job_id}/export"
 ZIP 内容：
 - SAM3: `result_{原文件名}.jpg` — 黑底抠像
 - DreamSim: `heatmap_{原文件名}.jpg` + `heatmap_{原文件名}_clean.jpg`
+- Pipeline: 只导出 DreamSim 阶段的最终结果（热力图），不包含中间 SAM3 抠像
 
-## 4.9 系统健康检查
+## 4.10 系统健康检查
 
 ```
 GET /api/health
@@ -1037,6 +1192,37 @@ ss -tlnp | grep 5433
 
 # 检查连通性
 psql -h localhost -p 5433 -U batch -d batch_detection -c "SELECT 1;"
+```
+
+### 问题：Pipeline 任务卡在 SAM3 阶段不推进
+
+```bash
+# 1. 检查 SAM3 child job 是否真正 completed
+docker exec batch-postgres psql -U batch -d batch_detection \
+  -c "SELECT id, pipeline_phase, status, total_tasks, completed_tasks, failed_tasks
+      FROM jobs WHERE parent_job_id = '<PIPELINE_JOB_ID>';"
+
+# 2. 如果 SAM3 child 的 completed_tasks + failed_tasks < total_tasks
+#    说明还有任务未完成，检查 Worker 是否存活
+curl -s http://localhost:8090/api/health | python3 -m json.tool
+
+# 3. 如果 SAM3 child 已 completed 但 DreamSim child 未创建
+#    检查 Gateway 日志中 Janitor 错误信息
+grep "Pipeline\|pipeline\|dreamsim" /var/log/batch_gateway.log | tail -20
+
+# 4. 确认 SAM3 结果文件确实存在
+ls /data/batch_shared/jobs/<SAM3_CHILD_ID>/results/ | head -5
+```
+
+### 问题：Pipeline DreamSim 阶段没有配对成功
+
+```bash
+# Janitor 会在日志中记录配对情况，检查是否降级到位置配对
+grep "no exact name matches\|paired.*image pairs" /var/log/batch_gateway.log
+
+# 常见原因:
+# 1. before/ 和 after/ 的原始图片文件名不同 → SAM3 结果文件名也不同 → 无法按名称配对
+# 2. 结果被 spillover 移走 → Janitor 同时检查 results/ 和 spillover/ 目录
 ```
 
 ## 5.4 数据库维护

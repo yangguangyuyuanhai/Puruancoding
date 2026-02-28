@@ -74,15 +74,19 @@ class JobRepository:
         params: dict,
         total_tasks: int,
         job_id: Optional[str] = None,
+        parent_job_id: Optional[str] = None,
+        pipeline_phase: Optional[str] = None,
     ) -> str:
         """
         创建新的批量任务记录
         Args:
-            model_type: 模型类型 (sam3/dreamsim)
+            model_type: 模型类型 (sam3/dreamsim/pipeline)
             input_path: 输入路径
             params: 推理参数字典
             total_tasks: 子任务总数
             job_id: 可选，指定 Job ID（确保与文件系统一致）
+            parent_job_id: 可选，父任务 ID（流水线子任务才有值）
+            pipeline_phase: 可选，流水线阶段标识 (sam3_before/sam3_after/dreamsim)
         Returns:
             job_id 字符串
         """
@@ -92,16 +96,19 @@ class JobRepository:
             job_id = str(uuid.uuid4())
         await pool.execute(
             """
-            INSERT INTO jobs (id, model_type, status, total_tasks, input_path, params)
-            VALUES ($1, $2, 'pending', $3, $4, $5)
+            INSERT INTO jobs (id, model_type, status, total_tasks, input_path, params,
+                              parent_job_id, pipeline_phase)
+            VALUES ($1, $2, 'pending', $3, $4, $5, $6, $7)
             """,
             uuid.UUID(job_id),           # $1: UUID 类型
             model_type,                   # $2: 模型类型
             total_tasks,                  # $3: 子任务总数
             input_path,                   # $4: 输入路径
             json.dumps(params),           # $5: 参数序列化为 JSON 字符串
+            uuid.UUID(parent_job_id) if parent_job_id else None,  # $6: 父任务 ID
+            pipeline_phase,               # $7: 流水线阶段
         )
-        logger.info(f"Job created: {job_id}, model={model_type}, total={total_tasks}")
+        logger.info(f"Job created: {job_id}, model={model_type}, total={total_tasks}, phase={pipeline_phase}")
         return job_id
 
     @staticmethod
@@ -165,6 +172,30 @@ class JobRepository:
             "UPDATE jobs SET status = 'cancelled', updated_at = now() WHERE id = $1",
             uuid.UUID(job_id),
         )
+
+    @staticmethod
+    async def get_children_jobs(parent_id: str) -> list[dict]:
+        """查询某个 pipeline job 的所有子任务，按创建时间排序"""
+        pool = await get_pool()
+        rows = await pool.fetch(
+            "SELECT * FROM jobs WHERE parent_job_id = $1 ORDER BY created_at",
+            uuid.UUID(parent_id),
+        )
+        return [dict(r) for r in rows]
+
+    @staticmethod
+    async def get_pipeline_parent(child_id: str) -> Optional[dict]:
+        """查询某个子任务的父任务"""
+        pool = await get_pool()
+        row = await pool.fetchrow(
+            """
+            SELECT p.* FROM jobs p
+            JOIN jobs c ON c.parent_job_id = p.id
+            WHERE c.id = $1
+            """,
+            uuid.UUID(child_id),
+        )
+        return dict(row) if row else None
 
 
 # ============================================================

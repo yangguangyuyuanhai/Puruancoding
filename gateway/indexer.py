@@ -162,3 +162,45 @@ def index_dreamsim_input(input_path: str, extract_base: str) -> list[dict]:
     pairs.sort(key=lambda p: p["after"])
     logger.info(f"Indexed {len(pairs)} image pairs from {base_dir}")
     return pairs
+
+
+def index_pipeline_input(input_path: str, extract_base: str) -> dict:
+    """
+    索引流水线输入：扫描 before/ 和 after/ 子目录的图片列表
+    Args:
+        input_path: 包含 before/ 和 after/ 子目录的路径（或 ZIP）
+        extract_base: ZIP 解压基础目录
+    Returns:
+        {"before_images": [path1, ...], "after_images": [path1, ...]}
+    """
+    # 处理 ZIP 或目录输入
+    if input_path.lower().endswith(".zip"):
+        extract_dir = os.path.join(extract_base, "extracted")
+        extract_zip(input_path, extract_dir)
+        base_dir = extract_dir
+    elif os.path.isdir(input_path):
+        base_dir = input_path
+    else:
+        raise ValueError(f"Input path must be a directory or ZIP file: {input_path}")
+
+    before_dir = os.path.join(base_dir, "before")
+    after_dir = os.path.join(base_dir, "after")
+
+    if not os.path.isdir(before_dir):
+        raise ValueError(f"Missing 'before/' subdirectory in {base_dir}")
+    if not os.path.isdir(after_dir):
+        raise ValueError(f"Missing 'after/' subdirectory in {base_dir}")
+
+    before_images = scan_images_from_directory(before_dir)
+    after_images = scan_images_from_directory(after_dir)
+
+    if not before_images:
+        raise ValueError(f"No images found in before/ directory: {before_dir}")
+    if not after_images:
+        raise ValueError(f"No images found in after/ directory: {after_dir}")
+
+    logger.info(f"Pipeline input indexed: {len(before_images)} before, {len(after_images)} after from {base_dir}")
+    return {
+        "before_images": before_images,
+        "after_images": after_images,
+    }

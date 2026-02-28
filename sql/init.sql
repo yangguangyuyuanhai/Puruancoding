@@ -38,7 +38,11 @@ CREATE TABLE IF NOT EXISTS jobs (
     -- 任务创建时间 (带时区)
     created_at TIMESTAMPTZ DEFAULT now(),
     -- 最后更新时间 (每次状态变更或进度更新时刷新)
-    updated_at TIMESTAMPTZ DEFAULT now()
+    updated_at TIMESTAMPTZ DEFAULT now(),
+    -- 流水线支持：父任务 ID（子任务才有值，父任务删除时级联删除子任务）
+    parent_job_id UUID REFERENCES jobs(id) ON DELETE CASCADE,
+    -- 流水线阶段标识: "sam3_before" | "sam3_after" | "dreamsim"（仅子任务有值）
+    pipeline_phase VARCHAR(20)
 );
 
 -- ============================================================
@@ -86,6 +90,9 @@ CREATE INDEX IF NOT EXISTS idx_tasks_bucket ON tasks(job_id, bucket_id, status);
 -- 使用场景: Gateway 筛选活跃任务 (WHERE status IN ('pending', 'running'))
 --           Dashboard 按状态分类展示
 CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status);
+-- 索引 4: 按父任务 ID 查询子任务
+-- 使用场景: Janitor 查询 pipeline job 的所有子任务 (WHERE parent_job_id=?)
+CREATE INDEX IF NOT EXISTS idx_jobs_parent ON jobs(parent_job_id);
 -- 索引 4: 按 Worker 和状态查询
 -- 使用场景: 诊断某个 Worker 处理了哪些任务 (WHERE worker_id=? AND status=?)
 --           排查 Worker 崩溃时定位其未完成的任务

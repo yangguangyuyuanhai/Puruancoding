@@ -16,16 +16,21 @@ import logging   # 日志
 import os        # 文件系统操作
 import shutil    # 文件移动（spillover）
 import time      # 时间戳
+import uuid      # UUID 生成（流水线创建 DreamSim child）
 from datetime import datetime  # 时间格式化（预留）
 
 # 导入配置参数
 from shared.config import (
     SHARED_ROOT, HEARTBEAT_DIR, JOBS_DIR, SPILLOVER_DIR,
     HEARTBEAT_TIMEOUT, JANITOR_INTERVAL, SPILLOVER_THRESHOLD_MB,
-    TASK_TIMEOUT,
+    TASK_TIMEOUT, IMAGE_EXTENSIONS,
 )
 # 导入数据库操作
 from gateway.db import JobRepository, TaskRepository
+# 导入调度器（流水线创建 DreamSim 子任务时复用）
+from gateway.scheduler import compute_bucket_count, distribute_dreamsim_tasks
+# 导入数据协议
+from shared.protocol import ModelType, JobStatus, JobMeta
 
 logger = logging.getLogger(__name__)
 
@@ -54,11 +59,12 @@ class Janitor:
         logger.info("Janitor stopped")
 
     async def _tick(self):
-        """每次巡检执行的四个操作"""
-        await self._check_job_completion()   # 1. 同步进度 + 检测完成
-        await self._reclaim_stale_tasks()    # 2. 回收超时任务
-        self._check_heartbeats()             # 3. 检查 Worker 心跳
-        self._check_spillover()              # 4. 检查结果目录大小
+        """每次巡检执行的五个操作"""
+        await self._check_job_completion()     # 1. 同步进度 + 检测完成（普通 job）
+        await self._check_pipeline_progress()  # 2. 流水线阶段推进（pipeline job）
+        await self._reclaim_stale_tasks()      # 3. 回收超时任务
+        self._check_heartbeats()               # 4. 检查 Worker 心跳
+        self._check_spillover()                # 5. 检查结果目录大小
 
     async def _check_job_completion(self):
         """
@@ -71,6 +77,9 @@ class Janitor:
         for job in jobs:
             # 只处理 pending 和 running 状态的 Job
             if job["status"] not in ("pending", "running"):
+                continue
+            # 跳过 pipeline parent job（由 _check_pipeline_progress 单独处理）
+            if job["model_type"] == ModelType.PIPELINE.value:
                 continue
 
             # 从 tasks 表获取实际的状态统计
@@ -98,6 +107,160 @@ class Janitor:
             elif completed_total >= total:
                 await JobRepository.update_status(str(job["id"]), "completed")
                 logger.info(f"Job {job['id']} completed: done={done}, failed={failed}")
+
+    async def _check_pipeline_progress(self):
+        """
+        检查所有 pipeline 类型的 parent job，推进流水线阶段
+        状态机：SAM3 children 都完成 → 创建 DreamSim child → DreamSim 完成 → pipeline 完成
+        """
+        jobs = await JobRepository.list_jobs(limit=100)
+        for job in jobs:
+            if job["model_type"] != ModelType.PIPELINE.value:
+                continue
+            if job["status"] not in ("pending", "running"):
+                continue
+
+            children = await JobRepository.get_children_jobs(str(job["id"]))
+            sam3_children = [c for c in children if c["pipeline_phase"] in ("sam3_before", "sam3_after")]
+            ds_children = [c for c in children if c["pipeline_phase"] == "dreamsim"]
+
+            # 检查是否有 SAM3 child 失败
+            sam3_failed = any(c["status"] == "failed" for c in sam3_children)
+            if sam3_failed:
+                await JobRepository.update_status(str(job["id"]), "failed")
+                logger.warning(f"Pipeline {job['id']} failed: SAM3 child failed")
+                continue
+
+            # 检查 SAM3 阶段是否全部完成
+            sam3_all_done = len(sam3_children) == 2 and all(
+                c["status"] == "completed" for c in sam3_children
+            )
+
+            if sam3_all_done and not ds_children:
+                # SAM3 全部完成且 DreamSim 还没创建 → 创建 DreamSim 子任务
+                try:
+                    await self._create_dreamsim_phase(job, sam3_children)
+                    logger.info(f"Pipeline {job['id']}: DreamSim phase created")
+                except Exception as e:
+                    logger.error(f"Pipeline {job['id']}: failed to create DreamSim phase: {e}", exc_info=True)
+                    await JobRepository.update_status(str(job["id"]), "failed")
+
+            elif ds_children:
+                ds_child = ds_children[0]
+                if ds_child["status"] == "completed":
+                    # DreamSim 也完成了 → 标记 pipeline job 完成
+                    await JobRepository.update_status(str(job["id"]), "completed")
+                    logger.info(f"Pipeline {job['id']} completed")
+                elif ds_child["status"] == "failed":
+                    await JobRepository.update_status(str(job["id"]), "failed")
+                    logger.warning(f"Pipeline {job['id']} failed: DreamSim child failed")
+
+    async def _create_dreamsim_phase(self, parent_job: dict, sam3_children: list[dict]):
+        """
+        创建 DreamSim 子任务阶段
+        1. 从两个 SAM3 child 的 results/ 目录收集结果文件
+        2. 按文件名配对
+        3. 创建 DreamSim child job 和 tasks
+        """
+        parent_id = str(parent_job["id"])
+        params = json.loads(parent_job["params"]) if isinstance(parent_job["params"], str) else parent_job["params"]
+        dreamsim_params = params["dreamsim"]
+        num_workers = params.get("num_workers", 24)
+
+        # 区分 before 和 after 的 SAM3 child
+        before_child = None
+        after_child = None
+        for c in sam3_children:
+            if c["pipeline_phase"] == "sam3_before":
+                before_child = c
+            elif c["pipeline_phase"] == "sam3_after":
+                after_child = c
+
+        if not before_child or not after_child:
+            raise ValueError("Missing SAM3 before or after child")
+
+        # 收集两个 SAM3 child 的结果文件
+        before_results_dir = os.path.join(JOBS_DIR, str(before_child["id"]), "results")
+        after_results_dir = os.path.join(JOBS_DIR, str(after_child["id"]), "results")
+
+        # 也检查 spillover 目录
+        before_spillover_dir = os.path.join(SPILLOVER_DIR, str(before_child["id"]))
+        after_spillover_dir = os.path.join(SPILLOVER_DIR, str(after_child["id"]))
+
+        def collect_result_files(results_dir: str, spillover_dir: str) -> dict[str, str]:
+            """收集结果文件，返回 {stem: full_path} 映射"""
+            files = {}
+            for d in [results_dir, spillover_dir]:
+                if not os.path.isdir(d):
+                    continue
+                for fname in os.listdir(d):
+                    ext = os.path.splitext(fname)[1].lower()
+                    if ext in IMAGE_EXTENSIONS:
+                        stem = os.path.splitext(fname)[0]
+                        files[stem] = os.path.join(d, fname)
+            return files
+
+        before_files = collect_result_files(before_results_dir, before_spillover_dir)
+        after_files = collect_result_files(after_results_dir, after_spillover_dir)
+
+        if not before_files:
+            raise ValueError(f"No result files in SAM3 before child {before_child['id']}")
+        if not after_files:
+            raise ValueError(f"No result files in SAM3 after child {after_child['id']}")
+
+        # 按文件名配对（stem 匹配）
+        image_pairs = []
+        matched_keys = set(before_files.keys()) & set(after_files.keys())
+        for key in sorted(matched_keys):
+            image_pairs.append({
+                "before": before_files[key],
+                "after": after_files[key],
+            })
+
+        if not image_pairs:
+            # 如果精确匹配失败，尝试按排序顺序一一配对
+            before_sorted = sorted(before_files.values())
+            after_sorted = sorted(after_files.values())
+            pair_count = min(len(before_sorted), len(after_sorted))
+            for i in range(pair_count):
+                image_pairs.append({
+                    "before": before_sorted[i],
+                    "after": after_sorted[i],
+                })
+            logger.warning(
+                f"Pipeline {parent_id}: no exact name matches, "
+                f"falling back to positional pairing ({pair_count} pairs)"
+            )
+
+        if not image_pairs:
+            raise ValueError("No image pairs could be formed from SAM3 results")
+
+        logger.info(f"Pipeline {parent_id}: paired {len(image_pairs)} image pairs for DreamSim")
+
+        # 创建 DreamSim child job
+        ds_job_id = str(uuid.uuid4())
+        ds_total = len(image_pairs)
+        ds_buckets = compute_bucket_count(ds_total, num_workers)
+
+        await JobRepository.create_job(
+            ModelType.DREAMSIM.value,
+            parent_job["input_path"],
+            dreamsim_params,
+            ds_total,
+            job_id=ds_job_id,
+            parent_job_id=parent_id,
+            pipeline_phase="dreamsim",
+        )
+
+        # 分发 DreamSim tasks
+        task_descriptors = distribute_dreamsim_tasks(ds_job_id, image_pairs, dreamsim_params, ds_buckets)
+        await TaskRepository.bulk_create(ds_job_id, task_descriptors)
+        await JobRepository.update_status(ds_job_id, JobStatus.RUNNING.value)
+
+        logger.info(
+            f"Pipeline {parent_id}: DreamSim child {ds_job_id} created "
+            f"with {ds_total} tasks in {ds_buckets} buckets"
+        )
 
     async def _reclaim_stale_tasks(self):
         """
