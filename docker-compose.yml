@@ -1,0 +1,261 @@
+# ============================================================
+# 违章建筑检测系统 - 批量推理平台 Docker Compose
+# ============================================================
+# 包含:
+#   - PostgreSQL 15 (独立实例, 端口 5433)
+#   - SAM3 Worker x4 (GPU 0-3)
+#   - DreamSim Worker x4 (GPU 4-7)
+# ============================================================
+
+services:
+  # ============================================================
+  # PostgreSQL 数据库
+  # ============================================================
+  batch-postgres:
+    image: postgres:15-alpine
+    container_name: batch-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: batch_detection
+      POSTGRES_USER: batch
+      POSTGRES_PASSWORD: batch_secret
+    ports:
+      - "5433:5432"
+    volumes:
+      - /data/batch_shared/pgdata:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U batch -d batch_detection"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ============================================================
+  # SAM3 Workers (GPU 0-3)
+  # ============================================================
+  sam3-worker-0:
+    build:
+      context: .
+      dockerfile: worker/Dockerfile.sam3
+    container_name: sam3-worker-0
+    restart: unless-stopped
+    command: ["--gpu-id", "0", "--model-type", "sam3", "--initial-workers", "3"]
+    environment:
+      - BATCH_PG_HOST=batch-postgres
+      - BATCH_PG_PORT=5432
+      - BATCH_PG_DB=batch_detection
+      - BATCH_PG_USER=batch
+      - BATCH_PG_PASS=batch_secret
+      - BATCH_SHARED_ROOT=/data/batch_shared
+      - NVIDIA_VISIBLE_DEVICES=0
+    volumes:
+      - /data/batch_shared:/data/batch_shared
+    depends_on:
+      batch-postgres:
+        condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["0"]
+              capabilities: [gpu]
+
+  sam3-worker-1:
+    build:
+      context: .
+      dockerfile: worker/Dockerfile.sam3
+    container_name: sam3-worker-1
+    restart: unless-stopped
+    command: ["--gpu-id", "1", "--model-type", "sam3", "--initial-workers", "3"]
+    environment:
+      - BATCH_PG_HOST=batch-postgres
+      - BATCH_PG_PORT=5432
+      - BATCH_PG_DB=batch_detection
+      - BATCH_PG_USER=batch
+      - BATCH_PG_PASS=batch_secret
+      - BATCH_SHARED_ROOT=/data/batch_shared
+      - NVIDIA_VISIBLE_DEVICES=1
+    volumes:
+      - /data/batch_shared:/data/batch_shared
+    depends_on:
+      batch-postgres:
+        condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["1"]
+              capabilities: [gpu]
+
+  sam3-worker-2:
+    build:
+      context: .
+      dockerfile: worker/Dockerfile.sam3
+    container_name: sam3-worker-2
+    restart: unless-stopped
+    command: ["--gpu-id", "2", "--model-type", "sam3", "--initial-workers", "3"]
+    environment:
+      - BATCH_PG_HOST=batch-postgres
+      - BATCH_PG_PORT=5432
+      - BATCH_PG_DB=batch_detection
+      - BATCH_PG_USER=batch
+      - BATCH_PG_PASS=batch_secret
+      - BATCH_SHARED_ROOT=/data/batch_shared
+      - NVIDIA_VISIBLE_DEVICES=2
+    volumes:
+      - /data/batch_shared:/data/batch_shared
+    depends_on:
+      batch-postgres:
+        condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["2"]
+              capabilities: [gpu]
+
+  sam3-worker-3:
+    build:
+      context: .
+      dockerfile: worker/Dockerfile.sam3
+    container_name: sam3-worker-3
+    restart: unless-stopped
+    command: ["--gpu-id", "3", "--model-type", "sam3", "--initial-workers", "3"]
+    environment:
+      - BATCH_PG_HOST=batch-postgres
+      - BATCH_PG_PORT=5432
+      - BATCH_PG_DB=batch_detection
+      - BATCH_PG_USER=batch
+      - BATCH_PG_PASS=batch_secret
+      - BATCH_SHARED_ROOT=/data/batch_shared
+      - NVIDIA_VISIBLE_DEVICES=3
+    volumes:
+      - /data/batch_shared:/data/batch_shared
+    depends_on:
+      batch-postgres:
+        condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["3"]
+              capabilities: [gpu]
+
+  # ============================================================
+  # DreamSim Workers (GPU 4-7)
+  # ============================================================
+  ds-worker-0:
+    build:
+      context: .
+      dockerfile: worker/Dockerfile.dreamsim
+    container_name: ds-worker-0
+    restart: unless-stopped
+    command: ["--gpu-id", "4", "--model-type", "dreamsim", "--initial-workers", "3"]
+    environment:
+      - BATCH_PG_HOST=batch-postgres
+      - BATCH_PG_PORT=5432
+      - BATCH_PG_DB=batch_detection
+      - BATCH_PG_USER=batch
+      - BATCH_PG_PASS=batch_secret
+      - BATCH_SHARED_ROOT=/data/batch_shared
+      - NVIDIA_VISIBLE_DEVICES=4
+    volumes:
+      - /data/batch_shared:/data/batch_shared
+    depends_on:
+      batch-postgres:
+        condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["4"]
+              capabilities: [gpu]
+
+  ds-worker-1:
+    build:
+      context: .
+      dockerfile: worker/Dockerfile.dreamsim
+    container_name: ds-worker-1
+    restart: unless-stopped
+    command: ["--gpu-id", "5", "--model-type", "dreamsim", "--initial-workers", "3"]
+    environment:
+      - BATCH_PG_HOST=batch-postgres
+      - BATCH_PG_PORT=5432
+      - BATCH_PG_DB=batch_detection
+      - BATCH_PG_USER=batch
+      - BATCH_PG_PASS=batch_secret
+      - BATCH_SHARED_ROOT=/data/batch_shared
+      - NVIDIA_VISIBLE_DEVICES=5
+    volumes:
+      - /data/batch_shared:/data/batch_shared
+    depends_on:
+      batch-postgres:
+        condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["5"]
+              capabilities: [gpu]
+
+  ds-worker-2:
+    build:
+      context: .
+      dockerfile: worker/Dockerfile.dreamsim
+    container_name: ds-worker-2
+    restart: unless-stopped
+    command: ["--gpu-id", "6", "--model-type", "dreamsim", "--initial-workers", "3"]
+    environment:
+      - BATCH_PG_HOST=batch-postgres
+      - BATCH_PG_PORT=5432
+      - BATCH_PG_DB=batch_detection
+      - BATCH_PG_USER=batch
+      - BATCH_PG_PASS=batch_secret
+      - BATCH_SHARED_ROOT=/data/batch_shared
+      - NVIDIA_VISIBLE_DEVICES=6
+    volumes:
+      - /data/batch_shared:/data/batch_shared
+    depends_on:
+      batch-postgres:
+        condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["6"]
+              capabilities: [gpu]
+
+  ds-worker-3:
+    build:
+      context: .
+      dockerfile: worker/Dockerfile.dreamsim
+    container_name: ds-worker-3
+    restart: unless-stopped
+    command: ["--gpu-id", "7", "--model-type", "dreamsim", "--initial-workers", "3"]
+    environment:
+      - BATCH_PG_HOST=batch-postgres
+      - BATCH_PG_PORT=5432
+      - BATCH_PG_DB=batch_detection
+      - BATCH_PG_USER=batch
+      - BATCH_PG_PASS=batch_secret
+      - BATCH_SHARED_ROOT=/data/batch_shared
+      - NVIDIA_VISIBLE_DEVICES=7
+    volumes:
+      - /data/batch_shared:/data/batch_shared
+    depends_on:
+      batch-postgres:
+        condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["7"]
+              capabilities: [gpu]

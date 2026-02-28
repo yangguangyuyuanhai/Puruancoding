@@ -1,0 +1,15 @@
+# Dockerfile for DreamSim Worker
+# 基于已有 diffsim-diffsim-runner:latest 镜像扩展，不修改原镜像
+FROM diffsim-diffsim-runner:latest
+
+# 安装 Worker 依赖
+RUN pip install --no-cache-dir psycopg2-binary
+
+# 复制 Worker 代码
+COPY worker/ /app/worker/
+COPY shared/ /app/shared/
+
+WORKDIR /app
+
+# 入口：通过 launcher.py 启动 N 个 Worker 进程
+ENTRYPOINT ["python3", "-m", "worker.launcher"]
