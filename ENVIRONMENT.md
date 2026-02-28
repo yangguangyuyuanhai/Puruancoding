@@ -251,6 +251,7 @@ python -m gateway.app
 ## 四、数据库迁移（从 v1.0 升级）
 
 v1.1 新增了 SAM3→DreamSim 流水线 (Pipeline) 功能，需要在 `jobs` 表中添加两个字段。
+v1.2 新增了毒丸防护机制，需要在 `tasks` 表中添加 `retry_count` 字段。
 
 **全新部署**无需额外操作，`sql/init.sql` 已包含所有字段。
 
@@ -258,23 +259,39 @@ v1.1 新增了 SAM3→DreamSim 流水线 (Pipeline) 功能，需要在 `jobs` �
 
 ```bash
 docker exec -i batch-postgres psql -U batch -d batch_detection <<'EOF'
--- 添加流水线父任务 ID（子任务才有值，父任务删除时级联删除子任务）
+-- v1.1: 添加流水线父任务 ID（子任务才有值，父任务删除时级联删除子任务）
 ALTER TABLE jobs ADD COLUMN IF NOT EXISTS parent_job_id UUID REFERENCES jobs(id) ON DELETE CASCADE;
--- 添加流水线阶段标识：sam3_before / sam3_after / dreamsim
+-- v1.1: 添加流水线阶段标识：sam3_before / sam3_after / dreamsim
 ALTER TABLE jobs ADD COLUMN IF NOT EXISTS pipeline_phase VARCHAR(20);
--- 添加流水线子任务查询索引
+-- v1.1: 添加流水线子任务查询索引
 CREATE INDEX IF NOT EXISTS idx_jobs_parent ON jobs(parent_job_id);
+-- v1.2: 添加任务重试计数（毒丸防护）
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS retry_count INTEGER DEFAULT 0;
 EOF
+```
+
+**从 v1.1 升级到 v1.2** 只需执行 retry_count 部分：
+
+```bash
+docker exec -i batch-postgres psql -U batch -d batch_detection \
+  -c "ALTER TABLE tasks ADD COLUMN IF NOT EXISTS retry_count INTEGER DEFAULT 0;"
 ```
 
 **验证：**
 
 ```bash
+# 验证 jobs 表新字段
 docker exec batch-postgres psql -U batch -d batch_detection \
   -c "\d jobs" | grep -E "parent_job_id|pipeline_phase"
 # 预期输出：
 #  parent_job_id  | uuid                     |           |          |
 #  pipeline_phase | character varying(20)    |           |          |
+
+# 验证 tasks 表新字段
+docker exec batch-postgres psql -U batch -d batch_detection \
+  -c "\d tasks" | grep retry_count
+# 预期输出：
+#  retry_count    | integer                  |           |          | 0
 ```
 
 ---

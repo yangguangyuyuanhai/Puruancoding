@@ -1,6 +1,6 @@
 # 违章建筑检测系统 — 批量推理平台
 
-# 使用与部署文档 v1.1
+# 使用与部署文档 v1.2
 
 ---
 
@@ -296,6 +296,7 @@ puruan_2_28/
 | `worker_id` | VARCHAR(50) | 执行该任务的 Worker ID |
 | `started_at` | TIMESTAMPTZ | 开始时间 |
 | `finished_at` | TIMESTAMPTZ | 完成时间 |
+| `retry_count` | INTEGER | 重试计数（毒丸防护，超过阈值标记 failed） |
 
 ### 索引
 
@@ -429,6 +430,7 @@ t=210s  空闲 30s → SCALE_DOWN → 逐步收缩回每卡 1 Worker
 - **Gateway AutoScaler** (`scaler.py`): 每 5 秒检查队列深度，写入 JSON 指令到 `/data/batch_shared/scaling/gpu_{id}.json`
 - **容器 Launcher** (`launcher.py`): 轮询指令文件，动态 `fork` / `terminate` 子进程
 - 缩容时等当前任务完成后再终止进程，不中断推理
+- **防震荡机制**：模型加载期间（~20s）新 Worker 尚未发出心跳，Scaler 使用 `_effective_workers() = max(心跳数, 最近下发目标值)` 防止重复扩容（60 秒窗口）
 
 ## 2.7 容错机制
 
@@ -437,7 +439,10 @@ t=210s  空闲 30s → SCALE_DOWN → 逐步收缩回每卡 1 Worker
 | 单张图片推理失败 | task 标记为 `failed`，不影响其他任务 | `POST /api/jobs/{id}/retry` |
 | Worker 进程崩溃 | Launcher 自动检测并重启子进程 | 自动 |
 | Worker 容器崩溃 | Docker `restart: unless-stopped` 自动重启 | 自动 |
-| 任务超时 (300s) | Janitor 回收 running → pending，其他 Worker 重新抢占 | 自动 |
+| 任务超时 (300s) | Janitor 回收 running → pending（retry_count+1），超过阈值标记 failed（毒丸隔离） | 自动 |
+| 毒丸任务 (OOM/Crash) | retry_count 超过 TASK_MAX_RETRIES 后直接标记 failed，不再重试 | 手动排查后 POST /retry |
+| Worker 强杀后 GPU 显存泄漏 | SIGTERM 触发优雅退出 + engine.unload + CUDA cache 清理；强杀后 nvidia-smi 检查残留进程 | 自动（极端情况需重启容器） |
+| AutoScaler 模型加载期震荡 | _effective_workers 60 秒窗口防止重复扩容 | 自动 |
 | 结果目录过大 | Janitor 自动 spillover 到溢出区 | 自动 |
 | 数据库连接断开 | Worker 自动重连 | 自动 |
 | Gateway 重启 | 任务状态在 DB 中持久化，不丢失 | 重启后自动恢复 |
@@ -658,8 +663,7 @@ curl http://localhost:8090/api/health
 | `HEARTBEAT_INTERVAL` | `5` | 心跳写入间隔 (秒) |
 | `HEARTBEAT_TIMEOUT` | `30` | 心跳超时判定 (秒) |
 | `TASK_TIMEOUT` | `300` | 任务超时回收 (秒) |
-
-### 弹性伸缩配置
+| `TASK_MAX_RETRIES` | `3` | 毒丸防护：任务最大重试次数 |
 
 | 变量 | 默认值 | 说明 |
 |------|--------|------|
@@ -1135,8 +1139,13 @@ docker compose -f puruan_2_28/docker-compose.yml logs -f --tail 20
 | `completed task` | 正常完成一个子任务 |
 | `failed task` | 子任务推理失败 |
 | `Reclaimed ... stale tasks` | Janitor 回收了超时任务 |
+| `Poison pill` | 毒丸任务被隔离（超过最大重试次数） |
 | `Stale workers detected` | 发现心跳超时的 Worker |
 | `Scale UP/DOWN` | AutoScaler 触发伸缩 |
+| `effective` | Scaler 使用防震荡有效 Worker 数 |
+| `CUDA cache cleared` | Worker 退出时成功清理 GPU 显存 |
+| `Force killing worker` | Worker 超时未退出被强制杀死 |
+| `residual processes` | 强杀后检测到 GPU 残留进程 |
 | `Spillover: moved` | 结果目录过大，触发溢出落盘 |
 
 ## 5.3 常见故障排查
@@ -1223,6 +1232,50 @@ grep "no exact name matches\|paired.*image pairs" /var/log/batch_gateway.log
 # 常见原因:
 # 1. before/ 和 after/ 的原始图片文件名不同 → SAM3 结果文件名也不同 → 无法按名称配对
 # 2. 结果被 spillover 移走 → Janitor 同时检查 results/ 和 spillover/ 目录
+```
+
+### 问题：毒丸任务反复杀死 Worker (OOM/Crash)
+
+```bash
+# 1. 查看是否有任务被标记为毒丸
+docker exec batch-postgres psql -U batch -d batch_detection \
+  -c "SELECT id, retry_count, error_msg FROM tasks
+      WHERE job_id = '<JOB_ID>' AND status = 'failed' AND retry_count >= 3;"
+
+# 2. 查看具体错误信息（通常是 OOM 或图片尺寸过大）
+curl -s http://localhost:8090/api/jobs/<JOB_ID>/failed | python3 -m json.tool
+
+# 3. 如确认问题已修复，可重置毒丸任务重新处理
+# POST /api/jobs/{id}/retry 会重置 retry_count=0 和 status='pending'
+curl -X POST http://localhost:8090/api/jobs/<JOB_ID>/retry
+
+# 4. 调整阈值（可选）
+export TASK_MAX_RETRIES=5  # 增加重试次数
+```
+
+### 问题：GPU 显存泄漏 / 幽灵显存占用
+
+```bash
+# 1. 检查各 GPU 显存使用情况
+nvidia-smi
+
+# 2. 查看是否有残留的 Python/CUDA 进程
+nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
+
+# 3. 查看 Worker 日志中是否有强杀记录
+docker logs sam3-worker-0 2>&1 | grep -E "Force killing|residual|CUDA cache"
+
+# 4. 如果显存被幽灵占用且无法回收
+# 方案 A: 重启对应 Worker 容器
+docker restart sam3-worker-0
+
+# 方案 B: 重启所有 Worker 容器
+docker compose -f puruan_2_28/docker-compose.yml restart
+
+# 预防措施:
+# - Worker 已注册 SIGTERM handler，正常退出时会执行 engine.unload + torch.cuda.empty_cache
+# - Launcher 在 scale_to/shutdown 时给 Worker 60 秒优雅退出时间
+# - 强杀后 Launcher 自动调用 nvidia-smi 检查残留进程并记录日志
 ```
 
 ## 5.4 数据库维护
@@ -1433,7 +1486,7 @@ curl http://localhost:8090/api/health
 | `HEARTBEAT_INTERVAL` | `5` | Worker | 心跳写入间隔 (秒) |
 | `HEARTBEAT_TIMEOUT` | `30` | Gateway | 心跳超时判定 (秒) |
 | `TASK_TIMEOUT` | `300` | Gateway | 任务超时回收 (秒) |
-| `JANITOR_INTERVAL` | `10` | Gateway | Janitor 巡检间隔 (秒) |
+| `TASK_MAX_RETRIES` | `3` | Gateway | 毒丸防护：任务最大重试次数 | | `10` | Gateway | Janitor 巡检间隔 (秒) |
 | `SPILLOVER_THRESHOLD_MB` | `10240` | Gateway | Spillover 阈值 (MB) |
 | `SAM3_MODEL_PATH` | `/app/checkpoints/sam3.pt` | Worker (SAM3) | SAM3 权重路径 |
 | `SAM3_DCE_WEIGHTS` | `/app/checkpoints/Zero-DCE.pth` | Worker (SAM3) | DCE 权重路径 |

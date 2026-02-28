@@ -14,6 +14,7 @@ import logging         # 日志记录
 import multiprocessing  # 多进程管理，每个 Worker 运行在独立子进程中
 import os              # 文件系统操作，读取伸缩指令文件
 import signal          # 信号处理，捕获 SIGTERM/SIGINT 实现优雅退出
+import subprocess      # 子进程调用，用于 GPU 显存回收
 import sys             # 系统退出
 import time            # 主循环的休眠间隔
 from typing import Optional  # 可选类型注解
@@ -111,7 +112,7 @@ class ProcessManager:
         调整 Worker 数量到目标值
         目标值会被限制在 [MIN_WORKERS_PER_GPU, MAX_WORKERS_PER_GPU] 范围内
         扩容: 启动新的子进程
-        缩容: 终止最高 index 的进程（后启动的先终止）
+        缩容: 终止最高 index 的进程（后启动的先终止），等待优雅退出
         """
         # 将目标值限制在合法范围内
         target = max(MIN_WORKERS_PER_GPU, min(target, MAX_WORKERS_PER_GPU))
@@ -126,15 +127,25 @@ class ProcessManager:
             # 缩容：终止最高 index 的进程（LIFO 策略）
             # 按序号倒序取出需要移除的进程
             indices_to_remove = sorted(self.processes.keys(), reverse=True)[:current - target]
+            force_killed = False
             for idx in indices_to_remove:
                 p = self.processes.pop(idx)  # 从字典中移除
                 logger.info(f"Terminating worker gpu{self.gpu_id}_w{idx} (pid={p.pid})")
-                p.terminate()  # 发送 SIGTERM 信号，Worker 会在当前任务完成后退出
-                p.join(timeout=30)  # 等待子进程退出，最多等 30 秒
+                p.terminate()  # 发送 SIGTERM 信号，Worker 的 handler 会设置 _running=False
+                # 等待 60 秒：Worker 需要完成当前推理 + engine.unload() 释放显存
+                # 之前 30 秒太短，大图推理可能需要更长时间
+                p.join(timeout=60)
                 if p.is_alive():
-                    # 30 秒后仍未退出，强制杀死（发送 SIGKILL）
-                    logger.warning(f"Force killing worker gpu{self.gpu_id}_w{idx}")
+                    # 60 秒后仍未退出，强制杀死（发送 SIGKILL）
+                    logger.warning(f"Force killing worker gpu{self.gpu_id}_w{idx} (CUDA context may leak)")
                     p.kill()
+                    p.join(timeout=5)  # 等待内核回收进程
+                    force_killed = True
+
+            # 如果发生了强制杀死，尝试回收泄漏的 GPU 显存
+            if force_killed:
+                self._try_reclaim_gpu_memory()
+
             logger.info(f"GPU {self.gpu_id}: scaled down {current} -> {target}")
 
     # ============================================================
@@ -144,13 +155,20 @@ class ProcessManager:
         """
         检查并重启崩溃的子进程
         遍历所有子进程，发现已退出的进程后自动重新启动
-        这保证了 Worker 即使因为 OOM、段错误等原因崩溃，也能自动恢复
+        如果进程是非正常退出（信号杀死或 OOM），先尝试回收泄漏的 GPU 显存
         """
         for idx, p in list(self.processes.items()):  # list() 避免遍历时修改字典
             if not p.is_alive():
+                exit_code = p.exitcode
                 # 子进程已退出，记录退出码并重启
-                logger.warning(f"Worker gpu{self.gpu_id}_w{idx} died (exit={p.exitcode}), restarting")
+                logger.warning(f"Worker gpu{self.gpu_id}_w{idx} died (exit={exit_code}), restarting")
                 self.processes.pop(idx)    # 移除已死的进程
+
+                # 非正常退出（被信号杀死 exitcode<0，或崩溃 exitcode!=0）时
+                # 尝试检查并回收残留的 GPU 显存
+                if exit_code is not None and exit_code != 0:
+                    self._try_reclaim_gpu_memory()
+
                 self._spawn_worker(idx)    # 使用相同的序号重新启动
 
     # ============================================================
@@ -186,8 +204,8 @@ class ProcessManager:
     def shutdown_all(self):
         """
         关闭所有子进程
-        先发送 SIGTERM 通知所有 Worker 优雅退出，然后等待它们完成当前任务
-        超时后强制杀死仍在运行的进程
+        先发送 SIGTERM 通知所有 Worker 优雅退出（触发 engine.unload 释放显存），
+        然后等待它们完成当前任务。超时后强制杀死仍在运行的进程。
         """
         self._shutdown = True
         # 第一轮：向所有子进程发送 SIGTERM 终止信号
@@ -195,14 +213,46 @@ class ProcessManager:
             logger.info(f"Stopping worker gpu{self.gpu_id}_w{idx}")
             p.terminate()
 
-        # 第二轮：等待所有子进程退出，每个最多等 30 秒
+        # 第二轮：等待所有子进程退出，每个最多等 60 秒
+        force_killed = False
         for idx, p in self.processes.items():
-            p.join(timeout=30)
+            p.join(timeout=60)
             if p.is_alive():
+                logger.warning(f"Force killing worker gpu{self.gpu_id}_w{idx} (CUDA context may leak)")
                 p.kill()  # 超时未退出则强制杀死
+                p.join(timeout=5)
+                force_killed = True
 
         self.processes.clear()  # 清空进程字典
+
+        if force_killed:
+            self._try_reclaim_gpu_memory()
+
         logger.info(f"All workers on GPU {self.gpu_id} stopped")
+
+    def _try_reclaim_gpu_memory(self):
+        """
+        尝试回收被强制杀死的 Worker 泄漏的 GPU 显存
+        当 p.kill() 强杀进程后，CUDA Context 可能未被正确销毁，
+        导致显存被"幽灵"占用。此方法使用 nvidia-smi 尝试回收。
+        注意：这不是 100% 可靠的，最坏情况下需要重启容器。
+        """
+        try:
+            # 使用 nvidia-smi 查看当前 GPU 上的进程，记录显存使用情况
+            result = subprocess.run(
+                ["nvidia-smi", "--query-compute-apps=pid,used_memory",
+                 f"--id={self.gpu_id}", "--format=csv,noheader"],
+                capture_output=True, text=True, timeout=10,
+            )
+            if result.stdout.strip():
+                logger.warning(
+                    f"GPU {self.gpu_id} has residual processes after force kill:\n"
+                    f"{result.stdout.strip()}"
+                )
+            else:
+                logger.info(f"GPU {self.gpu_id}: no residual CUDA processes detected")
+        except (subprocess.TimeoutExpired, FileNotFoundError, OSError) as e:
+            logger.warning(f"GPU memory check failed: {e}")
 
     @property
     def worker_count(self) -> int:

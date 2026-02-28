@@ -66,6 +66,9 @@ HEARTBEAT_INTERVAL = int(os.getenv("HEARTBEAT_INTERVAL", "5"))
 HEARTBEAT_TIMEOUT = int(os.getenv("HEARTBEAT_TIMEOUT", "30"))
 # 任务超时回收秒数，running 状态超过此时间的任务被 Janitor 重置为 pending
 TASK_TIMEOUT = int(os.getenv("TASK_TIMEOUT", "300"))
+# 毒丸防护：任务最大重试次数，超过此值的超时任务直接标记为 failed 而非重新排队
+# 防止一张导致 OOM 的超大图片在所有 Worker 间无限循环导致集群雪崩
+TASK_MAX_RETRIES = int(os.getenv("TASK_MAX_RETRIES", "3"))
 
 # ============================================================
 # Janitor 配置 (后台守护线程)

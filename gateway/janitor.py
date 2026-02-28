@@ -23,7 +23,7 @@ from datetime import datetime  # 时间格式化（预留）
 from shared.config import (
     SHARED_ROOT, HEARTBEAT_DIR, JOBS_DIR, SPILLOVER_DIR,
     HEARTBEAT_TIMEOUT, JANITOR_INTERVAL, SPILLOVER_THRESHOLD_MB,
-    TASK_TIMEOUT, IMAGE_EXTENSIONS,
+    TASK_TIMEOUT, TASK_MAX_RETRIES, IMAGE_EXTENSIONS,
 )
 # 导入数据库操作
 from gateway.db import JobRepository, TaskRepository
@@ -272,8 +272,10 @@ class Janitor:
         for job in jobs:
             if job["status"] not in ("pending", "running"):
                 continue
-            # 回收 running 超过 TASK_TIMEOUT 秒的任务
-            await TaskRepository.reclaim_stale_tasks(str(job["id"]), TASK_TIMEOUT)
+            # 回收 running 超过 TASK_TIMEOUT 秒的任务（含毒丸防护）
+            await TaskRepository.reclaim_stale_tasks(
+                str(job["id"]), TASK_TIMEOUT, TASK_MAX_RETRIES
+            )
 
     def _check_heartbeats(self):
         """

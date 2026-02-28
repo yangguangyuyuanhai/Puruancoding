@@ -12,6 +12,7 @@ from __future__ import annotations  # 支持类型注解的前向引用
 import json       # JSON 序列化/反序列化，用于解析任务参数
 import logging    # 日志记录
 import os         # 文件系统操作（创建目录、写心跳文件等）
+import signal     # 信号处理：捕获 SIGTERM 实现优雅退出并释放 GPU 显存
 import time       # 时间戳和计时
 import traceback  # 异常堆栈格式化，用于记录失败任务的详细错误
 from typing import Optional  # 可选类型注解
@@ -67,10 +68,21 @@ class BaseWorker:
     def start(self):
         """
         启动 Worker 主循环
-        流程: 连接数据库 -> 加载推理引擎 -> 进入无限循环 (心跳+抢任务+推理)
+        流程: 注册信号 -> 连接数据库 -> 加载推理引擎 -> 进入无限循环 (心跳+抢任务+推理)
         """
         self._running = True
         logger.info(f"Worker {self.worker_id} starting on GPU {self.gpu_id}")
+
+        # 注册 SIGTERM 信号处理器（关键：防止僵尸 GPU 显存）
+        # Python 默认收到 SIGTERM 时直接终止进程，不执行 finally 块
+        # 这会导致 engine.unload() 不被调用，CUDA Context 泄漏
+        # 注册自定义 handler 后，SIGTERM 仅设置 _running=False，
+        # 让主循环在当前任务完成后正常退出，finally 块释放显存
+        def _sigterm_handler(signum, frame):
+            logger.info(f"Worker {self.worker_id} received SIGTERM, finishing current task...")
+            self._running = False
+
+        signal.signal(signal.SIGTERM, _sigterm_handler)
 
         try:
             # 第一步：建立 PostgreSQL 数据库连接
@@ -372,7 +384,7 @@ class BaseWorker:
     def _cleanup(self):
         """
         清理资源，在 Worker 退出时调用（无论正常还是异常退出）
-        依次释放: 推理引擎 -> 数据库连接 -> 心跳文件
+        依次释放: 推理引擎 -> CUDA 显存缓存 -> 数据库连接 -> 心跳文件
         """
         # 释放推理引擎（卸载模型权重、释放 GPU 显存）
         if self.engine:
@@ -380,6 +392,17 @@ class BaseWorker:
                 self.engine.unload()
             except Exception as e:
                 logger.error(f"Engine unload error: {e}")
+
+        # 强制释放 CUDA 缓存（兜底：即使 unload 未完全释放，也清理残留显存）
+        try:
+            import torch
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+                # 重置已累积的峰值显存统计，帮助后续 Worker 获得干净的显存状态
+                torch.cuda.reset_peak_memory_stats()
+                logger.info(f"Worker {self.worker_id}: CUDA cache cleared")
+        except Exception as e:
+            logger.warning(f"CUDA cache cleanup failed: {e}")
 
         # 关闭数据库连接
         if self.conn:

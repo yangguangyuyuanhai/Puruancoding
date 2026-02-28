@@ -70,7 +70,9 @@ CREATE TABLE IF NOT EXISTS tasks (
     -- 开始处理时间 (Worker 抢占任务时填写)
     started_at TIMESTAMPTZ,
     -- 完成时间 (成功或失败时填写)
-    finished_at TIMESTAMPTZ
+    finished_at TIMESTAMPTZ,
+    -- 重试计数：Janitor 每次回收超时任务时 +1，超过上限直接标记 failed（防毒丸任务）
+    retry_count INTEGER DEFAULT 0
 );
 
 -- ============================================================

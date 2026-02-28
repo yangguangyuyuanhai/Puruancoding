@@ -353,39 +353,65 @@ class TaskRepository:
         return stats
 
     @staticmethod
-    async def reclaim_stale_tasks(job_id: str, timeout_seconds: int = 300) -> int:
+    async def reclaim_stale_tasks(job_id: str, timeout_seconds: int = 300, max_retries: int = 3) -> int:
         """
-        回收超时的 running 任务
+        回收超时的 running 任务（含毒丸防护）
         如果一个任务 running 超过 timeout_seconds 秒仍未完成，
-        说明 Worker 可能已崩溃，将其重置为 pending 让其他 Worker 重新抢占
+        说明 Worker 可能已崩溃。此时：
+        - retry_count < max_retries: 重置为 pending 并 retry_count + 1
+        - retry_count >= max_retries: 直接标记为 failed（毒丸隔离）
         """
         pool = await get_pool()
-        result = await pool.execute(
-            -- 使用 PostgreSQL 的 make_interval() 函数动态构造时间间隔
-            -- 例如 make_interval(secs => 300) 生成 '5 minutes' 间隔
-            -- started_at < now() - interval 表示：开始时间距今已超过 timeout 秒
+
+        # 第一步：回收 retry_count 未超限的超时任务 → pending
+        result_reclaimed = await pool.execute(
             """
             UPDATE tasks SET
                 status = 'pending',
                 worker_id = NULL,
-                started_at = NULL
+                started_at = NULL,
+                retry_count = retry_count + 1
             WHERE job_id = $1
               AND status = 'running'
               AND started_at < now() - make_interval(secs => $2)
+              AND retry_count < $3
             """,
             uuid.UUID(job_id),
             float(timeout_seconds),
+            max_retries,
         )
-        # asyncpg execute() 返回命令标签字符串（如 "UPDATE 3"），
-        # 其中最后一个空格后的数字是受影响的行数，通过 split()[-1] 提取
-        count = int(result.split()[-1])
-        if count > 0:
-            logger.warning(f"Reclaimed {count} stale tasks for job {job_id}")
-        return count
+        reclaimed_count = int(result_reclaimed.split()[-1])
+
+        # 第二步：将 retry_count 已达上限的超时任务 → failed（毒丸隔离）
+        result_poisoned = await pool.execute(
+            """
+            UPDATE tasks SET
+                status = 'failed',
+                error_msg = 'Poison task: exceeded max retries (' || $3 || '), likely causes OOM or crash',
+                finished_at = now()
+            WHERE job_id = $1
+              AND status = 'running'
+              AND started_at < now() - make_interval(secs => $2)
+              AND retry_count >= $3
+            """,
+            uuid.UUID(job_id),
+            float(timeout_seconds),
+            max_retries,
+        )
+        poisoned_count = int(result_poisoned.split()[-1])
+
+        if reclaimed_count > 0:
+            logger.warning(f"Reclaimed {reclaimed_count} stale tasks for job {job_id}")
+        if poisoned_count > 0:
+            logger.error(
+                f"Poison pill: {poisoned_count} tasks in job {job_id} exceeded "
+                f"{max_retries} retries, marked as failed"
+            )
+        return reclaimed_count + poisoned_count
 
     @staticmethod
     async def retry_failed_tasks(job_id: str) -> int:
-        """将 failed 任务重置为 pending，清除错误信息，允许 Worker 重新处理"""
+        """将 failed 任务重置为 pending，清除错误信息和重试计数，允许 Worker 重新处理"""
         pool = await get_pool()
         result = await pool.execute(
             """
@@ -394,7 +420,8 @@ class TaskRepository:
                 worker_id = NULL,
                 error_msg = NULL,
                 started_at = NULL,
-                finished_at = NULL
+                finished_at = NULL,
+                retry_count = 0
             WHERE job_id = $1 AND status = 'failed'
             """,
             uuid.UUID(job_id),

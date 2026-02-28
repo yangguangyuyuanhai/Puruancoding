@@ -40,6 +40,10 @@ class AutoScaler:
         self._last_scale_time: dict[int, float] = {}    # 每个 GPU 最后一次伸缩的时间
         self._scale_up_start: dict[int, float] = {}     # 开始满足扩容条件的时间
         self._scale_down_start: dict[int, float] = {}   # 开始满足缩容条件的时间
+        # 防震荡：记录每个 GPU 最近下发的 target_workers 和下发时间
+        # 解决模型加载期间（~20s）心跳还没出现导致重复扩容的问题
+        self._target_workers: dict[int, int] = {}       # GPU ID → 最近下发的目标 Worker 数
+        self._target_time: dict[int, float] = {}        # GPU ID → 下发目标的时间戳
 
     async def start(self):
         """启动 AutoScaler 后台循环"""
@@ -62,12 +66,17 @@ class AutoScaler:
         """
         每 5 秒执行一次伸缩检查
         对每个 GPU：统计 pending 任务数和活跃 Worker 数，决定扩容或缩容
+        防震荡：使用 _effective_workers() 计算「有效 Worker 数」，
+        避免模型加载期间心跳尚未出现导致重复扩容
         """
         now = time.time()
 
         for gpu_id in self.gpu_ids:
             # 获取该 GPU 上当前活跃的 Worker 数（通过心跳目录统计）
-            active = self._count_active_workers(gpu_id)
+            heartbeat_active = self._count_active_workers(gpu_id)
+            # 有效 Worker 数 = max(心跳数, 最近下发的目标值)
+            # 在模型加载期（~20s）心跳尚未出现时，用目标值兜底，防止重复扩容
+            active = self._effective_workers(gpu_id, heartbeat_active)
             # 获取分配给该 GPU 的 pending 任务数
             pending = await self._count_pending_for_gpu(gpu_id)
 
@@ -87,30 +96,62 @@ class AutoScaler:
                     target = min(active + 1, MAX_WORKERS_PER_GPU)  # 每次只扩 1 个
                     self._write_scaling_instruction(gpu_id, target)
                     self._last_scale_time[gpu_id] = now       # 记录伸缩时间
+                    self._target_workers[gpu_id] = target     # 记录目标值（防震荡）
+                    self._target_time[gpu_id] = now           # 记录目标下发时间
                     self._scale_up_start.pop(gpu_id, None)    # 重置计时器
                     self._scale_down_start.pop(gpu_id, None)
-                    logger.info(f"Scale UP gpu={gpu_id}: {active} -> {target} (pending={pending})")
+                    logger.info(
+                        f"Scale UP gpu={gpu_id}: {heartbeat_active}(heartbeat)/"
+                        f"{active}(effective) -> {target} (pending={pending})"
+                    )
             else:
                 # 条件不满足，重置扩容计时器
                 self._scale_up_start.pop(gpu_id, None)
 
             # === Scale-down 判断 ===
             # 条件：pending 为 0 且当前 Worker 数 > 最小值
-            if pending == 0 and active > MIN_WORKERS_PER_GPU:
+            # 缩容使用心跳实际值（而非 effective），因为此时只需关心真正在运行的进程
+            if pending == 0 and heartbeat_active > MIN_WORKERS_PER_GPU:
                 if gpu_id not in self._scale_down_start:
                     # 首次满足条件，记录开始时间
                     self._scale_down_start[gpu_id] = now
                 elif now - self._scale_down_start[gpu_id] >= SCALE_DOWN_SUSTAIN_SEC:
                     # 条件持续满足 SCALE_DOWN_SUSTAIN_SEC 秒，执行缩容
-                    target = max(active - 1, MIN_WORKERS_PER_GPU)  # 每次只缩 1 个
+                    target = max(heartbeat_active - 1, MIN_WORKERS_PER_GPU)  # 每次只缩 1 个
                     self._write_scaling_instruction(gpu_id, target)
                     self._last_scale_time[gpu_id] = now
+                    self._target_workers[gpu_id] = target
+                    self._target_time[gpu_id] = now
                     self._scale_down_start.pop(gpu_id, None)
                     self._scale_up_start.pop(gpu_id, None)
-                    logger.info(f"Scale DOWN gpu={gpu_id}: {active} -> {target}")
+                    logger.info(f"Scale DOWN gpu={gpu_id}: {heartbeat_active} -> {target}")
             else:
                 # 条件不满足，重置缩容计时器
                 self._scale_down_start.pop(gpu_id, None)
+
+    def _effective_workers(self, gpu_id: int, heartbeat_count: int) -> int:
+        """
+        计算「有效 Worker 数」，防止模型加载期间的扩容震荡
+
+        问题场景：
+        - t=0s: Scaler 下发扩容指令 1→2，Launcher 开始启动新 Worker
+        - t=5s: 新 Worker 正在加载 3.3GB SAM3 模型，还没发心跳
+        - t=5s: Scaler 看心跳还是 1，误以为扩容没生效，再次下发 2→3
+        - t=10s: 又以为没生效，下发 3→4，直到打满 MAX
+
+        修复：在 60 秒窗口内（模型加载 + 首次心跳的最大预期时间），
+        用 max(心跳数, 上次下发的目标值) 作为有效值，避免误判
+        """
+        now = time.time()
+        last_target = self._target_workers.get(gpu_id)
+        last_time = self._target_time.get(gpu_id, 0)
+
+        # 60 秒窗口：模型加载约 20s + 首次心跳间隔 5s + 余量
+        if last_target is not None and (now - last_time) < 60:
+            return max(heartbeat_count, last_target)
+
+        # 窗口过期或无历史记录，直接用心跳数
+        return heartbeat_count
 
     def _count_active_workers(self, gpu_id: int) -> int:
         """
