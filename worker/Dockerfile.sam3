@@ -1,15 +1,21 @@
-# Dockerfile for SAM3 Worker
+# ============================================================
+# SAM3 Worker Dockerfile
 # 基于已有 sam3-sam3:latest 镜像扩展，不修改原镜像
+# 仅添加：批量推理代码 (worker/ + shared/) + 数据库驱动 (psycopg2)
+# ============================================================
 FROM sam3-sam3:latest
 
-# 安装 Worker 依赖
+# 安装 PostgreSQL 同步驱动（Worker 使用 psycopg2 连接数据库）
 RUN pip install --no-cache-dir psycopg2-binary
 
-# 复制 Worker 代码
+# 复制批量推理 Worker 代码
 COPY worker/ /app/worker/
+# 复制共享模块（config.py, protocol.py）
 COPY shared/ /app/shared/
 
+# 设置工作目录
 WORKDIR /app
 
-# 入口：通过 launcher.py 启动 N 个 Worker 进程
+# 入口：通过 launcher.py 启动 N 个 Worker 子进程
+# 命令行参数由 docker-compose.yml 的 command 字段传入
 ENTRYPOINT ["python3", "-m", "worker.launcher"]
