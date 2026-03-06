@@ -21,7 +21,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 CREATE TABLE IF NOT EXISTS jobs (
     -- 主键：使用 UUID 而非自增 ID，避免多 Gateway 实例 ID 冲突
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    -- 模型类型：只允许 "sam3" (分割检测) 或 "dreamsim" (变化检测)
+    -- 模型类型：sam3 / dreamsim / dinov3 / pipeline
     model_type VARCHAR(20) NOT NULL,
     -- 状态机：pending → running → completed / failed / cancelled
     status VARCHAR(20) DEFAULT 'pending',
@@ -41,8 +41,10 @@ CREATE TABLE IF NOT EXISTS jobs (
     updated_at TIMESTAMPTZ DEFAULT now(),
     -- 流水线支持：父任务 ID（子任务才有值，父任务删除时级联删除子任务）
     parent_job_id UUID REFERENCES jobs(id) ON DELETE CASCADE,
-    -- 流水线阶段标识: "sam3_before" | "sam3_after" | "dreamsim"（仅子任务有值）
-    pipeline_phase VARCHAR(20)
+    -- 流水线阶段标识: "sam3_before" | "sam3_after" | "dreamsim" | "dinov3"（仅子任务有值）
+    pipeline_phase VARCHAR(20),
+    -- 流水线类型: "sam3_dinov3" (默认) | "sam3_dreamsim"（仅 pipeline parent job 有值）
+    pipeline_type VARCHAR(32)
 );
 
 -- ============================================================
@@ -72,7 +74,13 @@ CREATE TABLE IF NOT EXISTS tasks (
     -- 完成时间 (成功或失败时填写)
     finished_at TIMESTAMPTZ,
     -- 重试计数：Janitor 每次回收超时任务时 +1，超过上限直接标记 failed（防毒丸任务）
-    retry_count INTEGER DEFAULT 0
+    retry_count INTEGER DEFAULT 0,
+    -- 重推参数（覆盖 job 级别参数），JSONB 格式
+    params JSONB,
+    -- 优先级：默认 0，重推任务设为 1（越大越优先被 Worker 抢占）
+    priority INTEGER DEFAULT 0,
+    -- 结果元信息（clean_result 路径等），JSONB 格式
+    metadata JSONB
 );
 
 -- ============================================================
@@ -99,3 +107,9 @@ CREATE INDEX IF NOT EXISTS idx_jobs_parent ON jobs(parent_job_id);
 -- 使用场景: 诊断某个 Worker 处理了哪些任务 (WHERE worker_id=? AND status=?)
 --           排查 Worker 崩溃时定位其未完成的任务
 CREATE INDEX IF NOT EXISTS idx_tasks_worker ON tasks(worker_id, status);
+-- 索引 6: 按优先级抢占任务
+-- 使用场景: Worker 抢占任务时按 priority DESC, id ASC 排序，重推任务优先
+CREATE INDEX IF NOT EXISTS idx_tasks_priority ON tasks(status, priority DESC, id);
+-- 索引 7: 按状态和更新时间查询过期 Job
+-- 使用场景: Janitor 清理超过 30 天的已终态 Job
+CREATE INDEX IF NOT EXISTS idx_jobs_cleanup ON jobs(status, updated_at);

@@ -25,6 +25,8 @@ from PIL import Image  # Pillow: DreamSim 预处理要求 PIL 格式输入
 from shared.protocol import EngineInterface, TaskDescriptor, register_engine
 # 导入 DreamSim 模型类型配置
 from shared.config import DREAMSIM_MODEL_TYPE
+# 导入 LoFTR 配准模块
+from worker.engine_loftr import LoFTRRegistrator, RegistrationError
 
 # 获取当前模块的日志记录器
 logger = logging.getLogger(__name__)
@@ -46,6 +48,7 @@ class DreamSimEngine(EngineInterface):
         self.device = "cpu"       # 推理设备，load() 时设置
         self.model = None         # DreamSim 模型实例
         self.preprocess = None    # DreamSim 预处理函数（resize + normalize）
+        self.loftr = None         # LoFTR 配准器
 
     def load(self, device: str, **kwargs) -> None:
         """
@@ -74,6 +77,11 @@ class DreamSimEngine(EngineInterface):
         self.model.to(device)  # 确保模型在正确的设备上
         self.model.eval()      # 设置为推理模式（关闭 Dropout 等训练行为）
         logger.info("[DreamSim] Model loaded")
+
+        # 初始化 LoFTR 配准器
+        self.loftr = LoFTRRegistrator()
+        self.loftr.load(device)
+        logger.info("[DreamSim] LoFTR registrator loaded")
 
     def infer(self, task: TaskDescriptor, result_dir: str) -> dict:
         """
@@ -111,9 +119,12 @@ class DreamSimEngine(EngineInterface):
         output_path = os.path.join(result_dir, f"heatmap_{base_name}.jpg")            # 热力图叠加版
         clean_output_path = os.path.join(result_dir, f"heatmap_{base_name}_clean.jpg")  # 纯净标注版
 
-        # 执行滑窗扫描 + 热力图生成 + 标注框绘制
+        # Step 1: LoFTR 配准（失败则 raise，由 base_worker 标记 failed）
+        img1_cv, img2_cv = self.loftr.register(t1_path, t2_path)
+
+        # Step 2: 执行滑窗扫描 + 热力图生成 + 标注框绘制
         self._scan_and_draw(
-            t1_path, t2_path, output_path, clean_output_path,
+            img1_cv, img2_cv, output_path, clean_output_path,
             patch_size, stride, batch_size, threshold,
         )
 
@@ -132,8 +143,8 @@ class DreamSimEngine(EngineInterface):
     # ============================================================
     def _scan_and_draw(
         self,
-        t1_path: str,          # 前时相图片路径
-        t2_path: str,          # 后时相图片路径
+        img1_cv: np.ndarray,       # 前时相图片（配准后的 numpy 数组）
+        img2_cv: np.ndarray,       # 后时相图片（配准后的 numpy 数组）
         output_path: str,      # 热力图叠加版输出路径
         clean_output_path: str,  # 纯净标注版输出路径
         patch_size: int,       # 滑窗 patch 大小
@@ -150,12 +161,9 @@ class DreamSimEngine(EngineInterface):
         4. 热力图可视化 + 阈值过滤
         5. 轮廓检测 + 画框标注
         """
-        # ===== 第 1 步：读取图片 =====
-        img1_cv = cv2.imread(t1_path)  # 读取前时相图片（基准图）
-        img2_cv = cv2.imread(t2_path)  # 读取后时相图片（现状图）
-
+        # ===== 第 1 步：尺寸对齐 =====
         if img1_cv is None or img2_cv is None:
-            raise ValueError(f"Failed to read images: {t1_path}, {t2_path}")
+            raise ValueError("Failed to read images")
 
         # 强制对齐尺寸（以现状图 T2 为准，resize 基准图 T1）
         h, w = img2_cv.shape[:2]
@@ -308,6 +316,7 @@ class DreamSimEngine(EngineInterface):
         """
         self.model = None
         self.preprocess = None
+        self.loftr = None
         if torch.cuda.is_available():
             torch.cuda.empty_cache()  # 释放 GPU 显存缓存
         logger.info("[DreamSim] Engine unloaded")

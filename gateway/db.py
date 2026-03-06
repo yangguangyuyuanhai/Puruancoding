@@ -76,17 +76,19 @@ class JobRepository:
         job_id: Optional[str] = None,
         parent_job_id: Optional[str] = None,
         pipeline_phase: Optional[str] = None,
+        pipeline_type: Optional[str] = None,
     ) -> str:
         """
         创建新的批量任务记录
         Args:
-            model_type: 模型类型 (sam3/dreamsim/pipeline)
+            model_type: 模型类型 (sam3/dreamsim/dinov3/pipeline)
             input_path: 输入路径
             params: 推理参数字典
             total_tasks: 子任务总数
             job_id: 可选，指定 Job ID（确保与文件系统一致）
             parent_job_id: 可选，父任务 ID（流水线子任务才有值）
-            pipeline_phase: 可选，流水线阶段标识 (sam3_before/sam3_after/dreamsim)
+            pipeline_phase: 可选，流水线阶段标识 (sam3_before/sam3_after/dreamsim/dinov3)
+            pipeline_type: 可选，流水线类型 (sam3_dinov3/sam3_dreamsim)
         Returns:
             job_id 字符串
         """
@@ -97,8 +99,8 @@ class JobRepository:
         await pool.execute(
             """
             INSERT INTO jobs (id, model_type, status, total_tasks, input_path, params,
-                              parent_job_id, pipeline_phase)
-            VALUES ($1, $2, 'pending', $3, $4, $5, $6, $7)
+                              parent_job_id, pipeline_phase, pipeline_type)
+            VALUES ($1, $2, 'pending', $3, $4, $5, $6, $7, $8)
             """,
             uuid.UUID(job_id),           # $1: UUID 类型
             model_type,                   # $2: 模型类型
@@ -107,6 +109,7 @@ class JobRepository:
             json.dumps(params),           # $5: 参数序列化为 JSON 字符串
             uuid.UUID(parent_job_id) if parent_job_id else None,  # $6: 父任务 ID
             pipeline_phase,               # $7: 流水线阶段
+            pipeline_type,                # $8: 流水线类型
         )
         logger.info(f"Job created: {job_id}, model={model_type}, total={total_tasks}, phase={pipeline_phase}")
         return job_id
@@ -196,6 +199,26 @@ class JobRepository:
             uuid.UUID(child_id),
         )
         return dict(row) if row else None
+
+    @staticmethod
+    async def cleanup_old_jobs(retention_days: int = 30) -> list[str]:
+        """
+        查询并删除超过 retention_days 天的已终态 Job
+        CASCADE 自动删除关联的 tasks 记录
+        Returns: 被删除的 job_id 列表
+        """
+        pool = await get_pool()
+        rows = await pool.fetch(
+            """
+            DELETE FROM jobs
+            WHERE status IN ('completed', 'failed', 'cancelled')
+              AND parent_job_id IS NULL
+              AND updated_at < now() - make_interval(days => $1)
+            RETURNING id
+            """,
+            retention_days,
+        )
+        return [str(r["id"]) for r in rows]
 
 
 # ============================================================
@@ -439,3 +462,106 @@ class TaskRepository:
             uuid.UUID(job_id),
         )
         return [dict(r) for r in rows]
+
+    @staticmethod
+    async def get_task(task_id: str) -> Optional[dict]:
+        """按 ID 查询单个 Task"""
+        pool = await get_pool()
+        row = await pool.fetchrow(
+            "SELECT * FROM tasks WHERE id = $1",
+            uuid.UUID(task_id),
+        )
+        return dict(row) if row else None
+
+    @staticmethod
+    async def browse_results(
+        page: int = 1,
+        engine: Optional[str] = None,
+        status: Optional[str] = None,
+        keyword: Optional[str] = None,
+    ) -> tuple[int, Optional[dict]]:
+        """
+        翻页浏览推理结果
+        JOIN jobs 获取 model_type，筛选最近 30 天内的任务
+        Returns: (total_count, task_row_dict_or_None)
+        """
+        pool = await get_pool()
+
+        # 构造 WHERE 条件
+        conditions = ["t.finished_at > now() - interval '30 days'"]
+        params = []
+        idx = 1
+
+        if engine:
+            conditions.append(f"j.model_type = ${idx}")
+            params.append(engine)
+            idx += 1
+
+        if status:
+            conditions.append(f"t.status = ${idx}")
+            params.append(status)
+            idx += 1
+        else:
+            conditions.append("t.status IN ('done', 'failed')")
+
+        if keyword:
+            conditions.append(f"(t.image_path ILIKE ${idx} OR t.result_path ILIKE ${idx})")
+            params.append(f"%{keyword}%")
+            idx += 1
+
+        where_clause = " AND ".join(conditions)
+
+        # 获取总数
+        count_sql = f"""
+            SELECT COUNT(*) FROM tasks t
+            JOIN jobs j ON t.job_id = j.id
+            WHERE {where_clause}
+        """
+        total = await pool.fetchval(count_sql, *params)
+
+        if total == 0 or page < 1 or page > total:
+            return total, None
+
+        # 获取当前页（每页 1 条）
+        offset = page - 1
+        data_sql = f"""
+            SELECT t.*, j.model_type AS engine, j.params AS job_params
+            FROM tasks t
+            JOIN jobs j ON t.job_id = j.id
+            WHERE {where_clause}
+            ORDER BY t.finished_at DESC
+            LIMIT 1 OFFSET ${idx}
+        """
+        params.append(offset)
+        row = await pool.fetchrow(data_sql, *params)
+
+        return total, dict(row) if row else None
+
+    @staticmethod
+    async def rerun_task(task_id: str, new_params: dict, priority: int = 1) -> bool:
+        """
+        重置任务为 pending + 设置 priority + 覆盖 params
+        Returns: True if task was found and updated
+        """
+        pool = await get_pool()
+        result = await pool.execute(
+            """
+            UPDATE tasks SET
+                status = 'pending',
+                params = $1,
+                priority = $2,
+                worker_id = NULL,
+                started_at = NULL,
+                finished_at = NULL,
+                error_msg = NULL,
+                retry_count = 0
+            WHERE id = $3
+            """,
+            json.dumps(new_params),
+            priority,
+            uuid.UUID(task_id),
+        )
+        count = int(result.split()[-1])
+        if count > 0:
+            logger.info(f"Task {task_id} set to rerun with priority={priority}")
+        return count > 0

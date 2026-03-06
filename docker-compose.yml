@@ -4,7 +4,7 @@
 # 本文件定义系统的容器编排：
 #   - batch-postgres: PostgreSQL 15 数据库 (独立实例, 端口 5433, 避开现有 5432)
 #   - sam3-worker-0~3: SAM3 分割检测 Worker (分别绑定 GPU 0-3)
-#   - ds-worker-0~3: DreamSim 变化检测 Worker (分别绑定 GPU 4-7)
+#   - dinov3-worker-0~3: DINOv3 变化检测 Worker (分别绑定 GPU 4-7)
 # 所有 Worker 依赖 batch-postgres 健康后才启动
 # 所有容器共享 /data/batch_shared 卷进行 IPC 通信
 # ============================================================
@@ -156,16 +156,17 @@ services:
               capabilities: [gpu]
 
   # ============================================================
-  # DreamSim Workers (GPU 4-7) - 变化检测推理
-  # 结构与 SAM3 Worker 完全相同，仅模型类型和 GPU 分配不同
+  # DINOv3 Workers (GPU 4-7) - 变化检测推理（替代 DreamSim）
+  # 使用 DINOv3 Vision Transformer 进行变化检测
+  # 每个容器绑定一张 GPU，内部由 Launcher 启动 3 个 Worker 进程
   # ============================================================
-  ds-worker-0:
+  dinov3-worker-0:
     build:
       context: .
-      dockerfile: worker/Dockerfile.dreamsim  # 基于 diffsim-diffsim-runner:latest 扩展
-    container_name: ds-worker-0
+      dockerfile: worker/Dockerfile.dinov3  # 基于 diffsim-diffsim-runner:latest 扩展
+    container_name: dinov3-worker-0
     restart: unless-stopped
-    command: ["--gpu-id", "4", "--model-type", "dreamsim", "--initial-workers", "3"]
+    command: ["--gpu-id", "4", "--model-type", "dinov3", "--initial-workers", "3"]
     environment:
       - BATCH_PG_HOST=batch-postgres
       - BATCH_PG_PORT=5432
@@ -187,13 +188,13 @@ services:
               device_ids: ["4"]       # 分配 GPU 4
               capabilities: [gpu]
 
-  ds-worker-1:
+  dinov3-worker-1:
     build:
       context: .
-      dockerfile: worker/Dockerfile.dreamsim
-    container_name: ds-worker-1
+      dockerfile: worker/Dockerfile.dinov3
+    container_name: dinov3-worker-1
     restart: unless-stopped
-    command: ["--gpu-id", "5", "--model-type", "dreamsim", "--initial-workers", "3"]
+    command: ["--gpu-id", "5", "--model-type", "dinov3", "--initial-workers", "3"]
     environment:
       - BATCH_PG_HOST=batch-postgres
       - BATCH_PG_PORT=5432
@@ -215,13 +216,13 @@ services:
               device_ids: ["5"]       # 分配 GPU 5
               capabilities: [gpu]
 
-  ds-worker-2:
+  dinov3-worker-2:
     build:
       context: .
-      dockerfile: worker/Dockerfile.dreamsim
-    container_name: ds-worker-2
+      dockerfile: worker/Dockerfile.dinov3
+    container_name: dinov3-worker-2
     restart: unless-stopped
-    command: ["--gpu-id", "6", "--model-type", "dreamsim", "--initial-workers", "3"]
+    command: ["--gpu-id", "6", "--model-type", "dinov3", "--initial-workers", "3"]
     environment:
       - BATCH_PG_HOST=batch-postgres
       - BATCH_PG_PORT=5432
@@ -243,13 +244,13 @@ services:
               device_ids: ["6"]       # 分配 GPU 6
               capabilities: [gpu]
 
-  ds-worker-3:
+  dinov3-worker-3:
     build:
       context: .
-      dockerfile: worker/Dockerfile.dreamsim
-    container_name: ds-worker-3
+      dockerfile: worker/Dockerfile.dinov3
+    container_name: dinov3-worker-3
     restart: unless-stopped
-    command: ["--gpu-id", "7", "--model-type", "dreamsim", "--initial-workers", "3"]
+    command: ["--gpu-id", "7", "--model-type", "dinov3", "--initial-workers", "3"]
     environment:
       - BATCH_PG_HOST=batch-postgres
       - BATCH_PG_PORT=5432

@@ -5,3 +5,4 @@ asyncpg>=0.29.0
 psycopg2-binary>=2.9.9
 pydantic>=2.5.0
 python-multipart>=0.0.6
+websockets>=12.0

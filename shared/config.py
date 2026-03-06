@@ -97,6 +97,38 @@ SAM3_DCE_DEVICE = os.getenv("SAM3_DCE_DEVICE", "cuda")  # cuda | cpu
 DREAMSIM_MODEL_TYPE = os.getenv("DREAMSIM_MODEL_TYPE", "ensemble")
 
 # ============================================================
+# DINOv3 模型配置
+# ============================================================
+# DINOv3 默认敏感度（peak_ratio），越小越敏感
+DINOV3_PEAK_RATIO = float(os.getenv("DINOV3_PEAK_RATIO", "0.4"))
+# DINOv3 默认推理分辨率
+DINOV3_RES = int(os.getenv("DINOV3_RES", "2048"))
+# DINOv3 最低置信度阈值
+DINOV3_DINO_CONF = float(os.getenv("DINOV3_DINO_CONF", "0.15"))
+
+# ============================================================
+# LoFTR 配准配置
+# ============================================================
+# LoFTR 模型权重路径（容器内路径）
+LOFTR_WEIGHT_PATH = os.getenv("LOFTR_WEIGHT_PATH", "/app/weights/outdoor_ds.ckpt")
+# LoFTR 配置文件路径（容器内路径）
+LOFTR_CONFIG_PATH = os.getenv("LOFTR_CONFIG_PATH", "/app/configs/loftr/outdoor/loftr_ds.py")
+# 配准最少匹配特征点数，低于此值视为配准失败
+LOFTR_MIN_MATCHES = int(os.getenv("LOFTR_MIN_MATCHES", "30"))
+
+# ============================================================
+# 历史清理配置
+# ============================================================
+# 历史任务保留天数，超过此天数的已终态 Job 将被 Janitor 自动清理
+CLEANUP_RETENTION_DAYS = int(os.getenv("CLEANUP_RETENTION_DAYS", "30"))
+
+# ============================================================
+# 重推配置
+# ============================================================
+# 重推任务优先级（高于普通批量任务的 0）
+RERUN_PRIORITY = int(os.getenv("RERUN_PRIORITY", "1"))
+
+# ============================================================
 # Gateway 配置
 # ============================================================
 # Gateway HTTP 服务监听地址

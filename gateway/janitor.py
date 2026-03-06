@@ -24,11 +24,12 @@ from shared.config import (
     SHARED_ROOT, HEARTBEAT_DIR, JOBS_DIR, SPILLOVER_DIR,
     HEARTBEAT_TIMEOUT, JANITOR_INTERVAL, SPILLOVER_THRESHOLD_MB,
     TASK_TIMEOUT, TASK_MAX_RETRIES, IMAGE_EXTENSIONS,
+    CLEANUP_RETENTION_DAYS,
 )
 # 导入数据库操作
 from gateway.db import JobRepository, TaskRepository
-# 导入调度器（流水线创建 DreamSim 子任务时复用）
-from gateway.scheduler import compute_bucket_count, distribute_dreamsim_tasks
+# 导入调度器（流水线创建变化检测子任务时复用）
+from gateway.scheduler import compute_bucket_count, distribute_dreamsim_tasks, distribute_dinov3_tasks
 # 导入数据协议
 from shared.protocol import ModelType, JobStatus, JobMeta
 
@@ -40,6 +41,7 @@ class Janitor:
 
     def __init__(self):
         self._running = False  # 运行状态标志
+        self._tick_count = 0   # 巡检计数器（用于降频执行清理任务）
 
     async def start(self):
         """启动 Janitor 后台循环，每 JANITOR_INTERVAL 秒执行一次巡检"""
@@ -59,12 +61,16 @@ class Janitor:
         logger.info("Janitor stopped")
 
     async def _tick(self):
-        """每次巡检执行的五个操作"""
+        """每次巡检执行的操作"""
+        self._tick_count += 1
         await self._check_job_completion()     # 1. 同步进度 + 检测完成（普通 job）
         await self._check_pipeline_progress()  # 2. 流水线阶段推进（pipeline job）
         await self._reclaim_stale_tasks()      # 3. 回收超时任务
         self._check_heartbeats()               # 4. 检查 Worker 心跳
         self._check_spillover()                # 5. 检查结果目录大小
+        # 6. 历史清理（每 360 轮 ≈ 1 小时执行一次）
+        if self._tick_count % 360 == 0:
+            await self._cleanup_old_jobs()
 
     async def _check_job_completion(self):
         """
@@ -122,7 +128,7 @@ class Janitor:
 
             children = await JobRepository.get_children_jobs(str(job["id"]))
             sam3_children = [c for c in children if c["pipeline_phase"] in ("sam3_before", "sam3_after")]
-            ds_children = [c for c in children if c["pipeline_phase"] == "dreamsim"]
+            ds_children = [c for c in children if c["pipeline_phase"] in ("dreamsim", "dinov3")]
 
             # 检查是否有 SAM3 child 失败
             sam3_failed = any(c["status"] == "failed" for c in sam3_children)
@@ -137,35 +143,43 @@ class Janitor:
             )
 
             if sam3_all_done and not ds_children:
-                # SAM3 全部完成且 DreamSim 还没创建 → 创建 DreamSim 子任务
+                # SAM3 全部完成且变化检测还没创建 → 根据 pipeline_type 创建对应子任务
                 try:
-                    await self._create_dreamsim_phase(job, sam3_children)
-                    logger.info(f"Pipeline {job['id']}: DreamSim phase created")
+                    await self._create_comparison_phase(job, sam3_children)
+                    logger.info(f"Pipeline {job['id']}: comparison phase created")
                 except Exception as e:
-                    logger.error(f"Pipeline {job['id']}: failed to create DreamSim phase: {e}", exc_info=True)
+                    logger.error(f"Pipeline {job['id']}: failed to create comparison phase: {e}", exc_info=True)
                     await JobRepository.update_status(str(job["id"]), "failed")
 
             elif ds_children:
                 ds_child = ds_children[0]
                 if ds_child["status"] == "completed":
-                    # DreamSim 也完成了 → 标记 pipeline job 完成
+                    # 变化检测也完成了 → 标记 pipeline job 完成
                     await JobRepository.update_status(str(job["id"]), "completed")
                     logger.info(f"Pipeline {job['id']} completed")
                 elif ds_child["status"] == "failed":
                     await JobRepository.update_status(str(job["id"]), "failed")
-                    logger.warning(f"Pipeline {job['id']} failed: DreamSim child failed")
+                    logger.warning(f"Pipeline {job['id']} failed: comparison child failed")
 
-    async def _create_dreamsim_phase(self, parent_job: dict, sam3_children: list[dict]):
+    async def _create_comparison_phase(self, parent_job: dict, sam3_children: list[dict]):
         """
-        创建 DreamSim 子任务阶段
-        1. 从两个 SAM3 child 的 results/ 目录收集结果文件
-        2. 按文件名配对
-        3. 创建 DreamSim child job 和 tasks
+        创建变化检测子任务阶段（DINOv3 或 DreamSim）
+        根据 parent_job.pipeline_type 决定创建哪种引擎的任务
         """
         parent_id = str(parent_job["id"])
         params = json.loads(parent_job["params"]) if isinstance(parent_job["params"], str) else parent_job["params"]
-        dreamsim_params = params["dreamsim"]
         num_workers = params.get("num_workers", 24)
+
+        # 根据 pipeline_type 确定第二阶段引擎和参数
+        pipeline_type = parent_job.get("pipeline_type", "sam3_dinov3")
+        if pipeline_type == "sam3_dreamsim":
+            comparison_model_type = ModelType.DREAMSIM.value
+            comparison_phase = "dreamsim"
+            comparison_params = params.get("dreamsim", {})
+        else:  # sam3_dinov3 (default)
+            comparison_model_type = ModelType.DINOV3.value
+            comparison_phase = "dinov3"
+            comparison_params = params.get("dinov3", {})
 
         # 区分 before 和 after 的 SAM3 child
         before_child = None
@@ -235,30 +249,34 @@ class Janitor:
         if not image_pairs:
             raise ValueError("No image pairs could be formed from SAM3 results")
 
-        logger.info(f"Pipeline {parent_id}: paired {len(image_pairs)} image pairs for DreamSim")
+        logger.info(f"Pipeline {parent_id}: paired {len(image_pairs)} image pairs for {comparison_phase}")
 
-        # 创建 DreamSim child job
+        # 创建变化检测 child job
         ds_job_id = str(uuid.uuid4())
         ds_total = len(image_pairs)
         ds_buckets = compute_bucket_count(ds_total, num_workers)
 
         await JobRepository.create_job(
-            ModelType.DREAMSIM.value,
+            comparison_model_type,
             parent_job["input_path"],
-            dreamsim_params,
+            comparison_params,
             ds_total,
             job_id=ds_job_id,
             parent_job_id=parent_id,
-            pipeline_phase="dreamsim",
+            pipeline_phase=comparison_phase,
         )
 
-        # 分发 DreamSim tasks
-        task_descriptors = distribute_dreamsim_tasks(ds_job_id, image_pairs, dreamsim_params, ds_buckets)
+        # 分发任务
+        if comparison_phase == "dreamsim":
+            task_descriptors = distribute_dreamsim_tasks(ds_job_id, image_pairs, comparison_params, ds_buckets)
+        else:
+            task_descriptors = distribute_dinov3_tasks(ds_job_id, image_pairs, comparison_params, ds_buckets)
+
         await TaskRepository.bulk_create(ds_job_id, task_descriptors)
         await JobRepository.update_status(ds_job_id, JobStatus.RUNNING.value)
 
         logger.info(
-            f"Pipeline {parent_id}: DreamSim child {ds_job_id} created "
+            f"Pipeline {parent_id}: {comparison_phase} child {ds_job_id} created "
             f"with {ds_total} tasks in {ds_buckets} buckets"
         )
 
@@ -345,6 +363,28 @@ class Janitor:
                     f"Spillover: moved {moved} files from job {job_id} "
                     f"({total_size_mb:.0f}MB > {SPILLOVER_THRESHOLD_MB}MB threshold)"
                 )
+
+
+    async def _cleanup_old_jobs(self):
+        """
+        清理超过 CLEANUP_RETENTION_DAYS 天的已终态 Job
+        删除数据库记录（CASCADE 自动删 tasks）和文件系统目录
+        """
+        try:
+            deleted_ids = await JobRepository.cleanup_old_jobs(CLEANUP_RETENTION_DAYS)
+            if not deleted_ids:
+                return
+
+            # 删除文件系统中对应的 Job 目录和 spillover 目录
+            for job_id in deleted_ids:
+                for base_dir in [JOBS_DIR, SPILLOVER_DIR]:
+                    job_dir = os.path.join(base_dir, job_id)
+                    if os.path.isdir(job_dir):
+                        shutil.rmtree(job_dir, ignore_errors=True)
+
+            logger.info(f"Cleanup: removed {len(deleted_ids)} old jobs")
+        except Exception as e:
+            logger.error(f"Cleanup error: {e}", exc_info=True)
 
 
 def _dir_size_mb(path: str) -> float:

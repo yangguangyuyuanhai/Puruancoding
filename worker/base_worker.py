@@ -173,7 +173,7 @@ class BaseWorker:
                         WHERE t.status = 'pending'
                           AND j.status IN ('pending', 'running')
                           AND j.model_type = %s
-                        ORDER BY t.id
+                        ORDER BY t.priority DESC, t.id ASC
                         LIMIT 1
                         FOR UPDATE OF t SKIP LOCKED
                     )
@@ -229,6 +229,12 @@ class BaseWorker:
             # 从 jobs 表获取该 Job 的推理参数（text, conf, thresh 等）
             params = self._get_job_params(job_id)
 
+            # 优先使用 task 行的 params（重推覆盖的参数），fallback 到 job 的 params
+            task_params = task_row.get("params")
+            if task_params:
+                tp = json.loads(task_params) if isinstance(task_params, str) else task_params
+                params.update(tp)
+
             # 构造统一的任务描述符 TaskDescriptor
             td = TaskDescriptor(
                 task_id=task_id,
@@ -246,7 +252,8 @@ class BaseWorker:
             duration = time.time() - start_time  # 计算推理耗时
 
             # 推理成功：更新数据库中 task 状态为 done，Job 完成计数 +1
-            self._complete_task(task_id, job_id, result.get("result_path", ""))
+            metadata = result.get("metadata")
+            self._complete_task(task_id, job_id, result.get("result_path", ""), metadata)
             logger.info(
                 f"Worker {self.worker_id} completed task {task_id[:8]} "
                 f"in {duration:.1f}s"
@@ -283,17 +290,17 @@ class BaseWorker:
     # ============================================================
     # 任务状态更新 - 标记成功或失败
     # ============================================================
-    def _complete_task(self, task_id: str, job_id: str, result_path: str):
+    def _complete_task(self, task_id: str, job_id: str, result_path: str, metadata: dict = None):
         """
         标记任务成功
         更新 tasks 表状态为 done，同时更新 jobs 表的 completed_tasks 计数
         """
         try:
             with self.conn.cursor() as cur:
-                # 更新 tasks 表：状态改为 done，写入结果文件路径和完成时间
+                # 更新 tasks 表：状态改为 done，写入结果文件路径、元信息和完成时间
                 cur.execute(
-                    "UPDATE tasks SET status='done', result_path=%s, finished_at=now() WHERE id=%s",
-                    (result_path, task_id),
+                    "UPDATE tasks SET status='done', result_path=%s, metadata=%s, finished_at=now() WHERE id=%s",
+                    (result_path, json.dumps(metadata) if metadata else None, task_id),
                 )
                 # 更新 jobs 表：已完成任务计数 +1，刷新更新时间
                 cur.execute(

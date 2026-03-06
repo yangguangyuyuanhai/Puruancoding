@@ -9,6 +9,7 @@ FastAPI 入口 - HTTP 路由、参数校验、响应格式化
 from __future__ import annotations  # 支持类型注解的前向引用
 
 import asyncio    # 异步任务调度
+import base64     # Base64 编码
 import json       # JSON 解析
 import logging    # 日志
 import os         # 文件系统操作
@@ -21,14 +22,14 @@ from io import BytesIO           # 内存字节流
 from typing import Optional      # 可选类型注解
 from zipfile import ZipFile, ZIP_DEFLATED  # ZIP 打包
 
-from fastapi import FastAPI, HTTPException, Query  # Web 框架核心组件
+from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect  # Web 框架核心组件
 from fastapi.responses import StreamingResponse     # 流式响应（用于 ZIP 下载）
 from pydantic import BaseModel, Field               # 请求/响应数据模型
 
 # 导入共享配置（路径、端口等）
 from shared.config import (
     SHARED_ROOT, JOBS_DIR, SPILLOVER_DIR, HEARTBEAT_DIR,
-    GATEWAY_HOST, GATEWAY_PORT,
+    GATEWAY_HOST, GATEWAY_PORT, RERUN_PRIORITY,
 )
 # 导入数据协议（枚举、数据结构）
 from shared.protocol import JobMeta, ModelType, JobStatus
@@ -39,7 +40,7 @@ from gateway.indexer import index_sam3_input, index_dreamsim_input, index_pipeli
 # 导入任务调度器（分桶、分发任务）
 from gateway.scheduler import (
     compute_bucket_count, create_job_dirs, write_job_meta,
-    distribute_sam3_tasks, distribute_dreamsim_tasks,
+    distribute_sam3_tasks, distribute_dreamsim_tasks, distribute_dinov3_tasks,
 )
 # 导入后台守护线程
 from gateway.janitor import Janitor   # 心跳巡检、任务回收、spillover
@@ -86,7 +87,7 @@ async def lifespan(app: FastAPI):
 # 创建 FastAPI 应用实例
 app = FastAPI(
     title="违章建筑检测 - 批量推理平台",  # Swagger 文档标题
-    version="1.0.0",                       # API 版本
+    version="2.0.0",                       # API 版本
     lifespan=lifespan,                     # 绑定生命周期管理器
 )
 
@@ -97,7 +98,7 @@ app = FastAPI(
 class CreateJobRequest(BaseModel):
     """创建批量任务的请求体"""
     input_path: str = Field(..., description="输入目录或 ZIP 文件路径 (服务器本地路径)")
-    model_type: str = Field(..., description="模型类型: sam3 | dreamsim")
+    model_type: str = Field(..., description="模型类型: sam3 | dreamsim | dinov3 | pipeline")
     # SAM3 专用参数
     text: Optional[str] = Field(None, description="SAM3 检测提示词，描述要检测的目标物体（如 'building'）")
     conf: float = Field(0.2, description="SAM3 置信度阈值，低于此值的检测结果被过滤（范围 0~1）")
@@ -111,6 +112,11 @@ class CreateJobRequest(BaseModel):
     crop: int = Field(224, description="DreamSim 滑窗 patch 大小（像素），224 匹配 DreamSim 默认输入尺寸")
     step: int = Field(0, description="DreamSim 滑窗步长（0 = 自动设为 patch_size//2，即 50%% 重叠）")
     batch: int = Field(16, description="DreamSim GPU 批推理大小，增大可加速但消耗更多显存")
+    # DINOv3 专用参数
+    peak_ratio: float = Field(0.4, description="DINOv3 敏感度，越小越敏感（范围 0~1）")
+    res: int = Field(2048, description="DINOv3 推理分辨率")
+    # 流水线参数
+    pipeline_type: str = Field("sam3_dinov3", description="流水线类型: sam3_dinov3 (默认) | sam3_dreamsim")
     # 调度参数
     num_workers: int = Field(24, description="Worker 数量，用于 Bucket 划分（默认 24 = 8 GPU × 3 进程/卡）")
 
@@ -150,7 +156,9 @@ async def create_job(req: CreateJobRequest):
     流程: 验证参数 → 索引图片 → 分桶 → 写入 DB 和文件系统 → 返回 job_id
     """
     # 验证模型类型是否合法
-    if req.model_type not in (ModelType.SAM3.value, ModelType.DREAMSIM.value, ModelType.PIPELINE.value):
+    valid_types = (ModelType.SAM3.value, ModelType.DREAMSIM.value,
+                   ModelType.DINOV3.value, ModelType.PIPELINE.value)
+    if req.model_type not in valid_types:
         raise HTTPException(400, f"Invalid model_type: {req.model_type}")
 
     # 验证输入路径是否存在
@@ -198,10 +206,14 @@ async def create_job(req: CreateJobRequest):
             await TaskRepository.bulk_create(job_id, task_descriptors)
 
         elif req.model_type == ModelType.PIPELINE.value:
-            # --- SAM3→DreamSim 流水线任务 ---
+            # --- SAM3→DINOv3/DreamSim 流水线任务 ---
             # 流水线必须提供 SAM3 的文本提示词
             if not req.text:
                 raise HTTPException(400, "Pipeline model requires 'text' parameter for SAM3 phase")
+
+            # 验证 pipeline_type
+            if req.pipeline_type not in ("sam3_dinov3", "sam3_dreamsim"):
+                raise HTTPException(400, f"Invalid pipeline_type: {req.pipeline_type}")
 
             # 索引 before/ 和 after/ 目录
             pipeline_input = index_pipeline_input(req.input_path, extract_base)
@@ -218,24 +230,32 @@ async def create_job(req: CreateJobRequest):
                 "rect_fill": req.rect_fill,
                 "bbox_pad": req.bbox_pad,
             }
-            # 组装 DreamSim 推理参数（供后续 Janitor 使用）
-            dreamsim_params = {
-                "thresh": req.thresh,
-                "crop": req.crop,
-                "step": req.step,
-                "batch": req.batch,
-            }
+            # 根据 pipeline_type 组装第二阶段参数
+            if req.pipeline_type == "sam3_dreamsim":
+                comparison_params = {
+                    "thresh": req.thresh,
+                    "crop": req.crop,
+                    "step": req.step,
+                    "batch": req.batch,
+                }
+            else:  # sam3_dinov3
+                comparison_params = {
+                    "peak_ratio": req.peak_ratio,
+                    "res": req.res,
+                }
             # parent job 保存所有参数
             pipeline_params = {
                 "sam3": sam3_params,
-                "dreamsim": dreamsim_params,
+                "dreamsim": comparison_params if req.pipeline_type == "sam3_dreamsim" else {},
+                "dinov3": comparison_params if req.pipeline_type == "sam3_dinov3" else {},
                 "num_workers": req.num_workers,
             }
 
             # 1. 创建 parent pipeline job（无自己的 tasks，total_tasks=0）
             total_tasks = 0
             await JobRepository.create_job(
-                ModelType.PIPELINE.value, req.input_path, pipeline_params, total_tasks, job_id=job_id,
+                ModelType.PIPELINE.value, req.input_path, pipeline_params, total_tasks,
+                job_id=job_id, pipeline_type=req.pipeline_type,
             )
 
             # 2. 创建 SAM3 Before child job
@@ -288,6 +308,23 @@ async def create_job(req: CreateJobRequest):
                     {"job_id": after_job_id, "phase": "sam3_after", "total_tasks": after_total},
                 ],
             }
+
+        elif req.model_type == ModelType.DINOV3.value:
+            # --- DINOv3 变化检测任务 ---
+            image_pairs = index_dreamsim_input(req.input_path, extract_base)
+            if not image_pairs:
+                raise HTTPException(400, "No image pairs found")
+
+            total_tasks = len(image_pairs)
+            params = {
+                "peak_ratio": req.peak_ratio,
+                "res": req.res,
+            }
+
+            num_buckets = compute_bucket_count(total_tasks, req.num_workers)
+            await JobRepository.create_job(req.model_type, req.input_path, params, total_tasks, job_id=job_id)
+            task_descriptors = distribute_dinov3_tasks(job_id, image_pairs, params, num_buckets)
+            await TaskRepository.bulk_create(job_id, task_descriptors)
 
         else:  # dreamsim
             # --- DreamSim 变化检测任务 ---
@@ -371,13 +408,13 @@ async def get_job(job_id: str):
                 "failed_tasks": child["failed_tasks"],
                 "progress_pct": round(c_progress, 2),
             })
-            if child["pipeline_phase"] == "dreamsim":
+            if child["pipeline_phase"] in ("dreamsim", "dinov3"):
                 has_dreamsim = True
             if child["pipeline_phase"] in ("sam3_before", "sam3_after") and child["status"] != "completed":
                 sam3_all_done = False
         # 确定当前流水线阶段
         if has_dreamsim:
-            phase = "dreamsim"
+            phase = "comparison"  # dreamsim or dinov3 phase
         elif sam3_all_done and children:
             phase = "sam3_done"
         else:
@@ -492,10 +529,10 @@ async def export_results(job_id: str):
         # pipeline job：只收集 DreamSim child 的结果
         children = await JobRepository.get_children_jobs(job_id)
         export_job_ids = [
-            str(c["id"]) for c in children if c["pipeline_phase"] == "dreamsim"
+            str(c["id"]) for c in children if c["pipeline_phase"] in ("dreamsim", "dinov3")
         ]
         if not export_job_ids:
-            raise HTTPException(404, "DreamSim phase not yet created or completed")
+            raise HTTPException(404, "Comparison phase not yet created or completed")
     else:
         export_job_ids = [job_id]
 
@@ -578,6 +615,200 @@ async def health_check():
         workers=workers,
         active_jobs=active_jobs,
     )
+
+
+# ============================================================
+# 结果浏览翻页 API
+# ============================================================
+@app.get("/api/results/browse")
+async def browse_results(
+    page: int = Query(1, ge=1),
+    engine: Optional[str] = Query(None),
+    status: Optional[str] = Query(None),
+    keyword: Optional[str] = Query(None),
+):
+    """
+    翻页浏览推理结果，每页 1 条
+    支持按引擎类型、状态、路径关键词筛选
+    返回结果图片的 Base64 编码
+    """
+    total, task_row = await TaskRepository.browse_results(
+        page=page, engine=engine, status=status, keyword=keyword,
+    )
+
+    if task_row is None:
+        return {"total": total, "page": page, "page_size": 1, "task": None}
+
+    # 构造返回数据
+    task_engine = task_row.get("engine", "unknown")
+    images = []
+
+    if task_row.get("status") == "done" and task_row.get("result_path"):
+        # 读取结果图片转 Base64
+        result_path = task_row["result_path"]
+        if os.path.exists(result_path):
+            images.append({
+                "label": "热力图",
+                "base64": _file_to_base64(result_path),
+            })
+
+        # 变化检测类返回 2 张图（热力图 + clean）
+        if task_engine in ("dreamsim", "dinov3"):
+            metadata = task_row.get("metadata")
+            if metadata:
+                meta = json.loads(metadata) if isinstance(metadata, str) else metadata
+                clean_path = meta.get("clean_result")
+                if clean_path and os.path.exists(clean_path):
+                    images.append({
+                        "label": "框线图",
+                        "base64": _file_to_base64(clean_path),
+                    })
+
+    # 获取 task 级别的 params（重推覆盖的），fallback 到 job params
+    task_params = task_row.get("params")
+    if task_params:
+        display_params = json.loads(task_params) if isinstance(task_params, str) else task_params
+    else:
+        job_params = task_row.get("job_params")
+        display_params = json.loads(job_params) if isinstance(job_params, str) else job_params
+
+    return {
+        "total": total,
+        "page": page,
+        "page_size": 1,
+        "task": {
+            "task_id": str(task_row["id"]),
+            "job_id": str(task_row["job_id"]),
+            "engine": task_engine,
+            "status": task_row["status"],
+            "input_path": task_row.get("image_path") or (
+                json.loads(task_row["image_pair"]) if task_row.get("image_pair") else None
+            ),
+            "created_at": task_row.get("started_at", "").isoformat() if task_row.get("started_at") else None,
+            "finished_at": task_row.get("finished_at", "").isoformat() if task_row.get("finished_at") else None,
+            "params": display_params,
+            "images": images,
+        },
+    }
+
+
+def _file_to_base64(file_path: str) -> str:
+    """读取文件并转为 data URI 格式的 Base64 字符串"""
+    ext = os.path.splitext(file_path)[1].lower()
+    mime = "image/jpeg" if ext in (".jpg", ".jpeg") else "image/png"
+    with open(file_path, "rb") as f:
+        data = base64.b64encode(f.read()).decode("ascii")
+    return f"data:{mime};base64,{data}"
+
+
+# ============================================================
+# 单任务重推 API
+# ============================================================
+class RerunRequest(BaseModel):
+    """重推请求体"""
+    params: dict = Field(..., description="覆盖的推理参数")
+
+
+@app.post("/api/tasks/{task_id}/rerun")
+async def rerun_task(task_id: str, req: RerunRequest):
+    """
+    对单个任务重新推理，使用新参数覆盖原参数
+    重推任务设置 priority=1，优先被 Worker 抢占
+    """
+    # 查询 task 是否存在
+    task = await TaskRepository.get_task(task_id)
+    if not task:
+        raise HTTPException(404, f"Task not found: {task_id}")
+
+    # 确保 job 状态为 running（允许 Worker 抢占）
+    job = await JobRepository.get_job(str(task["job_id"]))
+    if not job:
+        raise HTTPException(404, f"Job not found for task: {task_id}")
+
+    # 重置任务状态
+    success = await TaskRepository.rerun_task(task_id, req.params, RERUN_PRIORITY)
+    if not success:
+        raise HTTPException(500, "Failed to rerun task")
+
+    # 确保 job 状态为 running
+    if job["status"] not in ("pending", "running"):
+        await JobRepository.update_status(str(job["id"]), "running")
+
+    logger.info(f"Task {task_id} set to rerun with params: {req.params}")
+    return {"task_id": task_id, "status": "pending", "priority": RERUN_PRIORITY}
+
+
+# ============================================================
+# WebSocket 重推结果推送
+# ============================================================
+@app.websocket("/ws/tasks/{task_id}")
+async def ws_task_status(websocket: WebSocket, task_id: str):
+    """
+    WebSocket 端点：客户端连接后轮询 task 状态，
+    状态变为 done/failed 时推送结果并关闭连接
+    """
+    await websocket.accept()
+
+    try:
+        while True:
+            await asyncio.sleep(2)  # 每 2 秒轮询
+
+            task = await TaskRepository.get_task(task_id)
+            if not task:
+                await websocket.send_json({
+                    "event": "error",
+                    "task_id": task_id,
+                    "error": "Task not found",
+                })
+                break
+
+            if task["status"] == "done":
+                # 成功：推送结果图片
+                images = []
+                job = await JobRepository.get_job(str(task["job_id"]))
+                engine = job["model_type"] if job else "unknown"
+
+                if task.get("result_path") and os.path.exists(task["result_path"]):
+                    images.append({
+                        "label": "热力图",
+                        "base64": _file_to_base64(task["result_path"]),
+                    })
+
+                if engine in ("dreamsim", "dinov3") and task.get("metadata"):
+                    meta = json.loads(task["metadata"]) if isinstance(task["metadata"], str) else task["metadata"]
+                    clean_path = meta.get("clean_result")
+                    if clean_path and os.path.exists(clean_path):
+                        images.append({
+                            "label": "框线图",
+                            "base64": _file_to_base64(clean_path),
+                        })
+
+                await websocket.send_json({
+                    "event": "rerun_complete",
+                    "task_id": task_id,
+                    "status": "done",
+                    "images": images,
+                })
+                break
+
+            elif task["status"] == "failed":
+                await websocket.send_json({
+                    "event": "rerun_complete",
+                    "task_id": task_id,
+                    "status": "failed",
+                    "error": task.get("error_msg", "Unknown error"),
+                })
+                break
+
+    except WebSocketDisconnect:
+        logger.info(f"WebSocket client disconnected for task {task_id}")
+    except Exception as e:
+        logger.error(f"WebSocket error for task {task_id}: {e}")
+    finally:
+        try:
+            await websocket.close()
+        except Exception:
+            pass
 
 
 # ============================================================

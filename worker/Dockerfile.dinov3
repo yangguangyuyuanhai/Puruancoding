@@ -1,0 +1,28 @@
+# ============================================================
+# DINOv3 Worker Dockerfile
+# 基于已有 diffsim-diffsim-runner:latest 镜像扩展
+# 该基础镜像已包含 DINOv3 模型权重 (config.json, model.safetensors, preprocessor_config.json)
+# 仅添加：批量推理代码 (worker/ + shared/) + 数据库驱动 (psycopg2) + LoFTR 文件
+# ============================================================
+FROM diffsim-diffsim-runner:latest
+
+# 安装 PostgreSQL 同步驱动（Worker 使用 psycopg2 连接数据库）
+RUN pip install --no-cache-dir psycopg2-binary
+
+# 复制 LoFTR 配准所需文件（构建前需从生产容器拷贝到构建上下文）
+# outdoor_ds.ckpt 权重文件
+COPY worker/loftr_weights/outdoor_ds.ckpt /app/images/weights/outdoor_ds.ckpt
+# LoFTR 源码和配置
+COPY worker/loftr_src/ /app/images/src/
+COPY worker/loftr_configs/ /app/images/configs/
+
+# 复制批量推理 Worker 代码
+COPY worker/ /app/worker/
+# 复制共享模块（config.py, protocol.py）
+COPY shared/ /app/shared/
+
+# 设置工作目录
+WORKDIR /app
+
+# 入口：通过 launcher.py 启动 N 个 Worker 子进程
+ENTRYPOINT ["python3", "-m", "worker.launcher"]

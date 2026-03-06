@@ -171,3 +171,40 @@ def distribute_dreamsim_tasks(
 
     logger.info(f"Distributed {len(tasks)} DreamSim tasks into {num_buckets} buckets for job {job_id}")
     return tasks
+
+
+def distribute_dinov3_tasks(
+    job_id: str,
+    image_pairs: list[dict],
+    params: dict,
+    num_buckets: int,
+) -> list[dict]:
+    """
+    将 DINOv3 图片对按轮转方式分配到 Bucket，生成任务描述符
+    与 DreamSim 结构相同，model_type 改为 dinov3
+    """
+    dirs = create_job_dirs(job_id)
+    tasks = []
+
+    for idx, pair in enumerate(image_pairs):
+        bucket_id = idx % num_buckets
+        task_id = str(uuid.uuid4())
+        td = TaskDescriptor(
+            task_id=task_id,
+            job_id=job_id,
+            bucket_id=bucket_id,
+            model_type=ModelType.DINOV3.value,
+            params=params,
+            image_pair=pair,
+        )
+        task_file = os.path.join(dirs["pending"], f"task_{idx:06d}.json")
+        with open(task_file, "w", encoding="utf-8") as f:
+            f.write(td.to_json())
+        tasks.append({
+            "task_id": task_id,
+            "bucket_id": bucket_id,
+            "image_pair": pair,
+        })
+
+    logger.info(f"Distributed {len(tasks)} DINOv3 tasks into {num_buckets} buckets for job {job_id}")
+    return tasks
